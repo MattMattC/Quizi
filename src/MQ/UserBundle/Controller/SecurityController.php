@@ -20,10 +20,6 @@ class SecurityController extends Controller
         if ($this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('mq_quizi_quizs');
         }
-
-        // Le service authentication_utils permet de récupérer le nom d'utilisateur
-        // et l'erreur dans le cas où le formulaire a déjà été soumis mais était invalide
-        // (mauvais mot de passe par exemple)
         $authenticationUtils = $this->get('security.authentication_utils');
 
         return $this->render('MQUserBundle:Security:login.html.twig', array(
@@ -34,16 +30,22 @@ class SecurityController extends Controller
 
     public function inscriptionAction(Request $request){
 
+
+        // Récupération des données envoyées par le formulaire d'inscription
         $request   = $this->container->get('request_stack')->getCurrentRequest();
+
         $username  = $request->request->get('username');
         $password  = $request->request->get('password');
+        $password2 = $request->request->get('password2');
+        $mail      = $request->request->get('mail');
 
-        $mail     = $request->request->get('mail');
-
+        // Récupérations des users de la base de données
+        // pour comparer l'existant
         $repository = $this->getDoctrine()->getRepository('MQUserBundle:User');
         $users = $repository->findAll();
 
         $userDejaUtilise = false;
+        $passNonIdentitque = false;
         $mailDelaUtilise = false;
 
         foreach ( $users as $userCourant ) {
@@ -60,50 +62,57 @@ class SecurityController extends Controller
         if ( $userDejaUtilise ) {
             return $this->redirect($this->generateUrl('mq_quizi_homepage', array('error' => 'Utilisateur déjà utilisé')));
         }else {
-            // On vérifie le mail n'est pas déjà utilisé
-            if ($mailDelaUtilise) {
-                return $this->redirect($this->generateUrl('mq_quizi_homepage', array('error' => 'Mail déjà utilisé')));
-            } else {
-
-                // Création de l'utilisateur
-                $user = new User();
-                // Attribution des attributs
-                $user->setRoles(array('ROLE_USER'));
-                $user->setUsername($username);
-                $user->setMail($mail);
-
-                // Encodage du mot de passe
-                $encoder = $this->container->get('security.password_encoder');
-                $encoded = $encoder->encodePassword($user, $password);
-                $user->setPassword($encoded);
-
-                // Enregistrement sur la BDD
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($user);
-                $em->flush();
-
-
-                if (!$user) {
-                    throw new UsernameNotFoundException("User not found");
+            // On vérifie que les mots de passes sont les même
+            if ( $password != $password2 ) {
+                return $this->redirect($this->generateUrl('mq_quizi_homepage', array(
+                        'error' => 'Mots de passe différents')
+                ));
+            }else{
+                // On vérifie le mail n'est pas déjà utilisé
+                if ($mailDelaUtilise) {
+                    return $this->redirect($this->generateUrl('mq_quizi_homepage', array('error' => 'Mail déjà utilisé')));
                 } else {
-                    $token = new UsernamePasswordToken($user, null, "main", $user->getRoles());
-                    $this->get("security.context")->setToken($token); //now the user is logged in
 
-                    //now dispatch the login event
-                    $request = $this->get("request");
-                    $event = new InteractiveLoginEvent($request, $token);
-                    $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+                    // Création de l'utilisateur
+                    $user = new User();
+                    // Attribution des attributs
+                    $user->setRoles(array('ROLE_USER'));
+                    $user->setUsername($username);
+                    $user->setMail($mail);
+
+                    // Encodage du mot de passe
+                    $encoder = $this->container->get('security.password_encoder');
+                    $encoded = $encoder->encodePassword($user, $password);
+                    $user->setPassword($encoded);
+
+                    // Enregistrement sur la BDD
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($user);
+                    $em->flush();
+
+
+                    if (!$user) {
+                        throw new UsernameNotFoundException("User not found");
+                    } else {
+                        $token = new UsernamePasswordToken($user, null, "main", $user->getRoles());
+                        $this->get("security.context")->setToken($token); //now the user is logged in
+
+                        //now dispatch the login event
+                        $request = $this->get("request");
+                        $event = new InteractiveLoginEvent($request, $token);
+                        $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+                    }
+
+                    $form = $this->createFormBuilder($user, array('csrf_protection' => false))
+                        ->setAction($this->generateUrl('login'))
+                        ->setMethod('POST')
+                        ->add('username', 'text', array('data' => $username))
+                        ->add('password', 'password', array('data' => $password))
+                        ->getForm();
+                    // $form->submit($request->request->get($form->getName()));
+
+                    return $this->redirect($this->generateUrl('mq_quizi_homepage'));
                 }
-
-                $form = $this->createFormBuilder($user, array('csrf_protection' => false))
-                    ->setAction($this->generateUrl('login'))
-                    ->setMethod('POST')
-                    ->add('username', 'text', array('data' => $username))
-                    ->add('password', 'password', array('data' => $password))
-                    ->getForm();
-               // $form->submit($request->request->get($form->getName()));
-
-               return $this->redirect($this->generateUrl('mq_quizi_homepage'));
             }
         }
 

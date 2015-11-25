@@ -42,6 +42,12 @@ class Quiz
      */
     private $dateCreationQuiz;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="MQ\UserBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
 
 
     /**
@@ -127,4 +133,28 @@ class Quiz
     }
 
 
+
+    /**
+     * Set user
+     *
+     * @param \MQ\UserBundle\Entity\User $user
+     *
+     * @return Quiz
+     */
+    public function setUser(\MQ\UserBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \MQ\UserBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

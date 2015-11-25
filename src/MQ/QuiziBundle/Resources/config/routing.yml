@@ -6,9 +6,9 @@ mq_quizi_admin_quizs:
     path:     /adminQuizs/
     defaults: { _controller: MQQuiziBundle:AdminQuizs:index }
 
-mq_quizi_add_quizs:
-    path:     /add/
-    defaults: { _controller: MQQuiziBundle:AdminAddQuizs:index }
+mq_quizi_ajout_quizs:
+    path:     /adminQuizs/ajout/
+    defaults: { _controller: MQQuiziBundle:AdminQuizs:ajout }
 
 mq_quizi_quizs:
     path:     /quizs/

@@ -28,5 +28,17 @@ class AdminQuizsController extends Controller
     }
 
 
+    public function ajoutAction(){
+
+        // Si on est du role Admin, on est redirigé
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')){
+            return $this->redirect($this->generateUrl("mq_quizi_admin_quizs"));
+        }
+
+        return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig');
+
+    }
+
+
 }
 

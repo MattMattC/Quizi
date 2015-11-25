@@ -1,0 +1,76 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}{{ quiz.titreQuiz }}{% endblock %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+    {{ parent() }}
+
+
+
+    <div class="container">
+
+        <br>
+        <h4 class="black-text">{{ quiz.titreQuiz }}</h4>
+        <h6 class="thin">Bonne chance :)</h6>
+
+        <div class="section">
+
+            {{ form_start(form) }}
+
+                <!-- Liste des questions -->
+                <ul class="collapsible" data-collapsible="accordion">
+
+                    {% for question in listQuestions %}
+
+                        <li>
+                            <div class="collapsible-header"><i id="checkQuestion{{ loop.index }}" class="material-icons">check_circle</i>Question {{ loop.index }}</div>
+                            <div class="collapsible-body">
+
+                                <br>
+                                <h5 class="center-align">{{ question.titreQuestion }}</h5>
+                                <br>
+
+                                {% set numQuestion = 'question' ~ loop.index %}
+
+                                <div class="row center">
+
+                                    {{ form_widget(attribute(form, numQuestion)) }}
+
+                                </div>
+
+
+
+                                <br>
+
+                            </div>
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+                <div class="center">
+
+                    {{ form_row(form.save, { 'label': 'Valider' }) }}
+
+                </div>
+
+            {{ form_end(form, {'render_rest': false}) }}
+
+            <br> <h6 class="center-align thin grey-text">Pour valider le quiz, il faut avoir répondu à chaque question.</h6>
+
+        </div>
+
+
+
+    </div>
+
+{% endblock %}

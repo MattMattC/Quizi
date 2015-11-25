@@ -1,0 +1,115 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ */
+
+/* Police pour le Quizi */
+@font-face {
+    font-family: 'signPainterFont';
+    src: url('../font/signPainterFont.otf') format('truetype'),
+    url('../font/signPainterFont.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.signPainterFont {
+    font-family: signPainterFont;
+    text-transform:uppercase;
+}
+
+
+/* Couleur des liens */
+a {
+    color:#ef6c00;
+}
+
+/* Menu */
+nav ul a,
+nav .brand-logo {
+    color: #ef6c00;
+}
+
+.navLeft ul {
+    margin:0 auto;
+    width:300px;
+}
+
+.navLeft li {
+    float:left;
+    margin: 0 1.15em;
+}
+
+/* Formulaires  */
+.input-field label {
+    color: #ef6c00;
+}
+.input-field input[type=text]:focus + label {
+    color: #ef6c00;
+}
+.input-field input[type=password]:focus + label {
+    color: #ef6c00;
+}
+.input-field input[type=email]:focus + label {
+    color: #ef6c00;
+}
+.input-field textarea.materialize-textarea:focus + label {
+    color: #ef6c00;
+}
+.input-field input[type=text]:focus {
+    border-bottom: 1px solid #ef6c00;
+    box-shadow: 0 1px 0 0 #ef6c00;
+}
+.input-field input[type=password]:focus {
+    border-bottom: 1px solid #ef6c00;
+    box-shadow: 0 1px 0 0 #ef6c00;
+}
+.input-field input[type=email]:focus {
+    border-bottom: 1px solid #ef6c00;
+    box-shadow: 0 1px 0 0 #ef6c00;
+}
+.input-field textarea.materialize-textarea:focus {
+    border-bottom: 1px solid #ef6c00;
+    box-shadow: 0 1px 0 0 #ef6c00;
+}
+.input-field input[type=text].valid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+.input-field input[type=password].valid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+.input-field input[type=email].valid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+.input-field textarea.materialize-textarea.valid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+.input-field input[type=text].invalid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+.input-field input[type=password].invalid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+.input-field input[type=email].invalid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+.input-field textarea.materialize-textarea.invalid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+.input-field .prefix.active {
+    color: #ef6c00;
+}
+
+
+#opacityNull {
+    opacity: 0;
+}

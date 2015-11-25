@@ -1,0 +1,48 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}{{ quiz.titreQuiz }}{% endblock %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+    {{ parent() }}
+
+    <div class="container">
+
+        <div class="row center">
+
+            <br>
+
+            <div class="col s12 m3"><p></p></div>
+
+            <div class="col s12 m6">
+
+                <div class="card-panel grey lighten-4">
+
+
+                    <h4 class="black-text">{{ quiz.titreQuiz }}</h4>
+                    <h6 class="thin">Créé le {{ quiz.dateCreationQuiz|date('d/m/Y') }}</h6>
+
+                    <br>
+                    <a href="{{ path('mq_quizi_rep_quizs',{idQuiz: quiz.id}) }}" class="btn">Démarrer le Quiz !</a>
+
+                </div>
+
+            </div>
+
+            <div class="col s12 m3"><p></p></div>
+
+
+
+
+        </div>
+
+    </div>
+
+{% endblock %}

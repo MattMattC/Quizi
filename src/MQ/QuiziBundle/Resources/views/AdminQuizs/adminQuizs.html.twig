@@ -1,0 +1,58 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}Administration Quizs{% endblock %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+    {{ parent() }}
+
+    <div class="container">
+
+        <br>
+        <h4 class="black-text">Mes Quiz's</h4>
+
+        <div class="section">
+
+
+            <table>
+
+                <thead>
+                <tr>
+                    <th data-field="date">Date</th>
+                    <th data-field="quiz">Quiz</th>
+                    <th data-field="modif">Modifier</th>
+                    <th data-field="supr">Supprimer</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+
+                {% for quiz in listQuizs %}
+
+                    <tr>
+                        <td><span class="thin">{{ quiz.dateCreationQuiz|date('d/m/Y') }}</span></td>
+                        <td>{{ quiz.titreQuiz }}</td>
+                        <td><a href="#" class="btn waves-effect">Modifier</a></td>
+                        <td><a href="#" class="btn waves-effect">Supprimer</a></td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,4 @@
+services:
+#    mq_quizi.example:
+#        class: MQ\QuiziBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

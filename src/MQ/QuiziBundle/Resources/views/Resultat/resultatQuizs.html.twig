@@ -1,0 +1,109 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}Resultat{% endblock %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+    {{ parent() }}
+
+
+
+    <div class="container">
+
+        <br>
+        <h4 class="black-text center-align">{{ quiz.titreQuiz }}</h4>
+
+        <br>
+
+        <div class="row center">
+            <div class="col s12">
+
+                <div class="card-panel grey lighten-4">
+
+                    <h5>Votre score : {{ nbReponsesCorrect }} / {{ nbQuestions }}</h5><br>
+
+                    {% if pourcentageRes == 1 %}
+
+                        <h6 class="green-text">100% !! Bravo, vous êtes doué !<br><br><i class="material-icons large">thumb_up</i></h6>
+
+                    {% elseif pourcentageRes > 0.60 %}
+
+                        <h6 class="green-text text-darken-3">Vous êtes officiellement bon, continuez comme ça !<br><br><i class="material-icons large">tag_faces</i></h6>
+
+                    {% elseif pourcentageRes > 0.40 %}
+
+                        <h6 class="blue-text">C'est pas mal, mais vous pouvez faire mieux !<br><br><i class="material-icons large">wb_sunny</i></h6>
+
+                    {% elseif pourcentageRes > 0.15 %}
+
+                        <h6 class="red-text darken-3">La, il va falloir se culturer !<br><br><i class="material-icons large">mood_bad</i></h6>
+
+                    {% else %}
+
+                        <h6 class="red-text">Désolé, mais vous êtes officiellement mauvais !<br><br><i class="material-icons large">thumb_down</i></h6>
+
+                    {% endif %}
+
+
+                    {% if quiz.affichageFinalQuiz != 1 %}
+
+                        <table>
+
+                            <thead>
+                            <tr>
+                                <th data-field="que">Question</th>
+                                <th data-field="repU">Votre réponse</th>
+                                <th data-field="res">Résultat</th>
+
+                                {% if quiz.affichageFinalQuiz == 3 %}
+                                    <th data-field="repC">Réponse correct</th>
+                                {% endif %}
+
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            {% for res in tabResultats %}
+
+                                <tr>
+                                    <td>{{ res.titreQuestion }}</td>
+                                    <td>{{ res.reponseUtilisateur }}</td>
+
+                                    {% if res.idReponseUtilisateur == res.idReponseCorrect %}
+                                        <td class="green-text">Correct</td>
+                                    {% else %}
+                                        <td class="red-text">Incorrect</td>
+                                    {% endif %}
+
+                                    {% if quiz.affichageFinalQuiz == 3 %}
+                                        <td>{{ res.reponseCorrect }}</td>
+                                    {% endif %}
+
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+{% endblock %}

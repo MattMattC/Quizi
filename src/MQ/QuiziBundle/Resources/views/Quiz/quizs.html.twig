@@ -1,0 +1,42 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}Les Quiz's{% endblock %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+    {{ parent() }}
+
+    <div class="container">
+
+        <br>
+        <h4 class="black-text">Les Quiz's</h4>
+
+        <div class="section">
+
+            <div class="collection">
+
+                {% for quiz in listQuizs %}
+
+                    <a href="{{ path('mq_quizi_view_quizs',{idQuiz: quiz.id}) }}" class="collection-item orange-text text-darken-3">
+                        <span class="left grey-text thin" style="padding-right:10px;">{{ quiz.dateCreationQuiz|date('d/m/Y') }}</span>
+                        {{ quiz.titreQuiz }}
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+{% endblock %}

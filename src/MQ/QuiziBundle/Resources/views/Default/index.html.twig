@@ -1,0 +1,190 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}Accueil{% endblock %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+
+    <div class="container">
+
+
+        <!-- Quizi -->
+        <div class="row">
+            <h2 class="center-align"><span class="signPainterFont">Quizi !</span></h2>
+            <h6 class="thin center-align">Choisissez un type d'accès à la plateforme.</h6>
+        </div>
+
+        <!-- Accordéon -->
+        <ul class="collapsible popout" data-collapsible="accordion">
+
+            <!-- Invite -->
+            <li>
+                <div class="collapsible-header"><i class="material-icons">whatshot</i>Invité</div>
+                <div class="collapsible-body">
+
+                    <div class="row center">
+                        <p class="thin">Lorsque vous accéder à la plateforme en tant qu'invité, vous pouvez seulement répondre à des quiz's. Vous ne pouvez pas en créer.</p>
+                        <br>
+                        <a class="btn waves-effect waves-light" href="{{ path('mq_quizi_quizs') }}">Accéder à la plateforme</a>
+                    </div>
+
+                </div>
+            </li>
+
+
+            <!-- Connexion -->
+            <li>
+
+
+                {# Le formulaire, avec URL de soumission vers la route « login_check » comme on l'a vu #}
+
+                <div class="collapsible-header active"><i class="material-icons">account_circle</i>Connexion</div>
+                <div class="collapsible-body">
+
+                    <div class="row">
+
+                        <div class="col s2 m3 l4"><p></p></div>
+
+                        <!-- Formulaire -->
+                        <form id="formConnexion" action="{{ path('login_check') }}" method="post" class="col s8 m6 l4">
+
+                            <!-- Login Input -->
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input name="_username" id="loginConnexion" type="text" class="validate">
+                                    <label for="loginConnexion">Login</label>
+                                </div>
+                            </div>
+
+                            <!-- Password Input -->
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input name="_password" id="passwordConnexion" type="password" class="validate">
+                                    <label for="passwordConnexion">Mot de passe</label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Input -->
+                            <div class="row center">
+                                <button class="btn waves-effect waves-light" type="submit" name="action">Se connecter</button>
+                            </div>
+
+
+                        </form>
+
+                        <div class="col s2 m3 l4"><p></p></div>
+
+                    </div>
+
+                </div>
+            </li>
+
+            <!-- Inscription -->
+            <li>
+                <div class="collapsible-header"><i class="material-icons">add_circle</i>Inscription</div>
+                <div class="collapsible-body">
+
+
+                    <p class="thin center-align">Inscrivez vous en quelques secondes afin de pouvoir proposer vos propres quiz's sur la plateforme.</p>
+
+                    <div class="row">
+
+                        <div class="col s2 m3 l4"><p></p></div>
+
+                        <!-- Formulaire -->
+                        <form id="formInscription" action="{{ url('inscription') }}" method="post" class="col s8 m6 l4">
+
+                            <!-- Login Input -->
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="loginInscription" name="username" type="text" class="validate">
+                                    <label for="loginInscription">Login</label>
+                                </div>
+                            </div>
+
+                            <!-- Password Input -->
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="passwordInscription"  type="password" onkeyup="verifForm();" name="password" class="invalidate">
+                                    <label for="passwordInscription">Mot de passe</label>
+                                </div>
+                            </div>
+
+                            <!-- Password 2 Input -->
+                            <div class="">
+
+                            </div>
+                            <div class="row">
+
+                                <div class="input-field col s12">
+                                    <input id="password2Inscription" name="password2" onkeyup="verifForm();" type="password" class="validate">
+                                    <label for="password2Inscription">Mot de passe (confirmation)</label>
+                                </div>
+
+                            </div>
+
+
+                            <!-- Email Input -->
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="emailInscription" name="mail" type="email" onkeyup="verifForm();" class="validate">
+                                    <label for="emailInscription">E-mail</label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Input -->
+                            <div class="row center">
+                                <button id="sub" disabled class="btn waves-effect waves-light" type="submit" name="action">S'inscrire</button>
+                            </div>
+
+
+                            <div class="">
+
+                            </div>
+
+                            <script type="text/javascript">
+
+                                var pass1 = document.getElementById("passwordInscription");
+                                var pass2 = document.getElementById("password2Inscription");
+                                var sub   = document.getElementById("sub");
+                                var mail  = document.getElementById("emailInscription");
+
+                                function verifForm(){
+
+                                    if(pass1.value != pass2.value ){
+                                        sub.disabled=true;
+                                    }else{
+                                        sub.disabled=false;
+                                        if(mail.value==""){
+                                            sub.disabled=true;
+                                        }else{
+                                            sub.disabled=false;
+                                        }
+                                    }
+
+
+                                }
+
+
+                            </script>
+                        </form>
+
+                        <div class="col s2 m3 l4"><p></p></div>
+
+                    </div>
+
+                </div>
+            </li>
+        </ul>
+
+
+    </div>
+
+{% endblock %}

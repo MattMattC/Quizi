@@ -1,0 +1,27 @@
+mq_quizi_homepage:
+    path:     /
+    defaults: { _controller: MQQuiziBundle:Default:index }
+
+mq_quizi_admin_quizs:
+    path:     /adminQuizs/
+    defaults: { _controller: MQQuiziBundle:AdminQuizs:index }
+
+mq_quizi_quizs:
+    path:     /quizs/
+    defaults: { _controller: MQQuiziBundle:Quizs:indexQuiz }
+
+mq_quizi_view_quizs:
+    path:     /quizs/{idQuiz}
+    defaults: { _controller: MQQuiziBundle:Quizs:viewQuiz}
+    requirements:
+        idQuiz: \d+
+
+mq_quizi_rep_quizs:
+    path:     /quizs/rep/{idQuiz}
+    defaults: { _controller: MQQuiziBundle:Reponse:repQuiz}
+    requirements:
+        idQuiz: \d+
+
+mq_quizi_resultat_quizs:
+    path:     /quizs/res
+    defaults: { _controller: MQQuiziBundle:Resultat:resultatQuiz}

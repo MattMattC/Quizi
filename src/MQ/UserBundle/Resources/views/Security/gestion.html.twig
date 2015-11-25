@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}Accueil{% endblock %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+
+<!--Menu Navbar-->
+<div class="navbar-fixed">
+    <nav class="white">
+        <div class="nav-wrapper container white">
+            <a href="#" class="brand-logo"><span class="signPainterFont">Quizi !</span></a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse orange-text text-darken-3"><i class="material-icons">menu</i></a>
+            <!--Menu version site-->
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#">Les Quiz's</a></li>
+                <li><a href="#">Administrer ses Quiz's</a></li>
+                <li><a href="{{  url('gestion_user') }}">Administrer les User's</a></li>
+                <li><a href="{{ url('logout') }}">Se Déconnecter</a></li>
+            </ul>
+            <!--Menu version mobiles/tablettes-->
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="#">Accueil</a></li>
+                <li><a href="#">Parcours</a></li>
+                <li><a href="#">Compétences</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="container">
+
+<br/>
+    <div class="divider"></div>
+
+<table>
+        <thead>
+        <tr>
+            <th data-field="id">ID</th>
+            <th data-field="name">Login</th>
+            <th data-field="email">Mail</th>
+            <th data-field="role">Role</th>
+            <th data-field="supprimer">Supprimer</th>
+        </tr>
+        </thead>
+
+
+    <!-- Modal Structure -->
+
+        <tbody>
+
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.mail }}</td>
+                <td>{{ user.roles[0] }}</td>
+                <td><a class="waves-effect waves-light btn modal-trigger" href="{{ path('delete_user', {'id': user.id}) }}"
+                       onclick="return confirm('Etes vous sûr de vouloir supprimer cet utilisateur')" >Supprimer</a></td>
+            </tr>
+
+        {% endfor %}
+
+
+        </tbody>
+
+    </table>
+
+
+</div>
+
+{% endblock %}

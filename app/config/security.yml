@@ -38,8 +38,8 @@ security:
 
     access_control:
 
-            - { path: ^/adminQuiz, roles: ROLE_USER}
-
+            - { path: ^/adminQuizs, roles: ROLE_USER}
+            - { path: ^/add, roles: ROLE_USER}
             # activate different ways to authenticate
 
             # http_basic: ~

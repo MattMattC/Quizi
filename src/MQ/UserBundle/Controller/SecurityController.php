@@ -60,17 +60,27 @@ class SecurityController extends Controller
 
         // On vérifie si le login n'est pas déjà utilisé
         if ( $userDejaUtilise ) {
-            return $this->redirect($this->generateUrl('mq_quizi_homepage', array('error' => 'Utilisateur déjà utilisé')));
-        }else {
+
+            return $this->render('MQQuiziBundle:Default:index.html.twig', array(
+                'error' => 'Utilisateur déjà utilisé'
+            ));
+
+        } else {
             // On vérifie que les mots de passes sont les même
             if ( $password != $password2 ) {
-                return $this->redirect($this->generateUrl('mq_quizi_homepage', array(
-                        'error' => 'Mots de passe différents')
+                return $this->render('MQQuiziBundle:Default:index.html.twig', array(
+                    'error' => 'Mots de passe différents'
                 ));
             }else{
+
+
                 // On vérifie le mail n'est pas déjà utilisé
                 if ($mailDelaUtilise) {
-                    return $this->redirect($this->generateUrl('mq_quizi_homepage', array('error' => 'Mail déjà utilisé')));
+
+                    return $this->render("MQQuiziBundle:Default:index.html.twig", array(
+                        'error' => 'Mail déjà utilisé'
+                    ));
+
                 } else {
 
                     // Création de l'utilisateur

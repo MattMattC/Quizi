@@ -39,7 +39,6 @@ security:
     access_control:
 
             - { path: ^/adminQuizs, roles: ROLE_USER}
-            - { path: ^/add, roles: ROLE_USER}
             # activate different ways to authenticate
 
             # http_basic: ~

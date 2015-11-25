@@ -45,7 +45,7 @@
 
                 {# Le formulaire, avec URL de soumission vers la route « login_check » comme on l'a vu #}
 
-                <div class="collapsible-header active"><i class="material-icons">account_circle</i>Connexion</div>
+                <div id="ongletConnexion" class="collapsible-header active"><i class="material-icons">account_circle</i>Connexion</div>
                 <div class="collapsible-body">
 
                     <div class="row">
@@ -87,8 +87,8 @@
             </li>
 
             <!-- Inscription -->
-            <li>
-                <div class="collapsible-header"><i class="material-icons">add_circle</i>Inscription</div>
+            <li >
+                <div id="ongletInscription" class="collapsible-header"><i class="material-icons">add_circle</i>Inscription</div>
                 <div class="collapsible-body">
 
 
@@ -145,8 +145,18 @@
                             </div>
 
 
-                            <div class="">
+                            <div class="card-panel white-text red lighten-2">
 
+
+                                {%  if error is defined %}
+                                    <script>
+                                        var ongletConn = document.getElementById('ongletConnexion');
+                                        var ongletInsc = document.getElementById('ongletInscription');
+                                        ongletConn.className="collapsible-header";
+                                        ongletInsc.className="collapsible-header active";
+                                    </script>
+                                    <h6 class="center-align white-text">{{ error }}</h6>
+                                {% endif %}
                             </div>
 
                             <script type="text/javascript">

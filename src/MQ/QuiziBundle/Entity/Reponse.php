@@ -37,7 +37,7 @@ class Reponse
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="MQ\QuiziBundle\Entity\Question",inversedBy="reponses")
+     * @ORM\ManyToOne(targetEntity="MQ\QuiziBundle\Entity\Question",inversedBy="reponses",cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $question;

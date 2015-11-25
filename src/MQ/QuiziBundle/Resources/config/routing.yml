@@ -10,6 +10,10 @@ mq_quizi_ajout_quizs:
     path:     /adminQuizs/ajout/
     defaults: { _controller: MQQuiziBundle:AdminQuizs:ajout }
 
+mq_quizi_ajout_questions_quizs:
+    path:     /adminQuizs/ajout/{idQuiz}
+    defaults: { _controller: MQQuiziBundle:AdminQuizs:ajoutQuestions }
+
 mq_quizi_quizs:
     path:     /quizs/
     defaults: { _controller: MQQuiziBundle:Quizs:indexQuiz }

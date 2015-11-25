@@ -52,6 +52,7 @@ class ReponseController extends Controller
 
             }
 
+
             $form = $form->add('question' . $i, 'choice', array(
                 'choices' => $listeReponses,
                 'multiple' => false, 'expanded' => true, 'attr' => array('onclick' => 'checkQuestion(' . $i . ');')

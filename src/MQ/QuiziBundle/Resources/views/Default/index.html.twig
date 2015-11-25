@@ -58,7 +58,7 @@
                             <!-- Login Input -->
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input name="_username" id="loginConnexion" type="text" class="validate">
+                                    <input name="_username" id="loginConnexion" type="text"  class="validate">
                                     <label for="loginConnexion">Login</label>
                                 </div>
                             </div>
@@ -76,13 +76,22 @@
                                 <button class="btn waves-effect waves-light" type="submit" name="action">Se connecter</button>
                             </div>
 
+                            {%  if error_login is defined %}
+                                <div class="card-panel  white-text red lighten-2">
+                                    <h6 class="center-align white-text">{{ error_login }}</h6>
+                                </div>
+                            {% endif %}
+
 
                         </form>
 
-                        <div class="col s2 m3 l4"><p></p></div>
+                        <div class="col s2 m3 l4">
+                            <p></p>
+
+
+                        </div>
 
                     </div>
-
                 </div>
             </li>
 
@@ -145,19 +154,18 @@
                             </div>
 
 
-                            <div class="card-panel white-text red lighten-2">
-
-
-                                {%  if error is defined %}
+                            <!-- Card pour afficher les erreurs -->
+                            {%  if error_inscription is defined %}
+                                <div class="card-panel white-text red lighten-2">
                                     <script>
                                         var ongletConn = document.getElementById('ongletConnexion');
                                         var ongletInsc = document.getElementById('ongletInscription');
                                         ongletConn.className="collapsible-header";
                                         ongletInsc.className="collapsible-header active";
                                     </script>
-                                    <h6 class="center-align white-text">{{ error }}</h6>
-                                {% endif %}
-                            </div>
+                                    <h6 class="center-align white-text">{{ error_inscription }}</h6>
+                                </div>
+                            {% endif %}
 
                             <script type="text/javascript">
 
@@ -167,19 +175,26 @@
                                 var mail  = document.getElementById("emailInscription");
 
                                 function verifForm(){
-
-                                    if(pass1.value != pass2.value ){
+                                    if(pass1.value != pass2.value && pass1.value=="" && pass2.value==""){
                                         sub.disabled=true;
                                     }else{
                                         sub.disabled=false;
                                         if(mail.value==""){
                                             sub.disabled=true;
                                         }else{
-                                            sub.disabled=false;
+                                            if(!validateEmail()){
+                                                sub.disabled=true;
+                                            }else{
+                                                sub.disabled=false;
+                                            }
                                         }
                                     }
+                                }
 
-
+                                function validateEmail() {
+                                    var email = document.getElementById('emailInscription').value;
+                                    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+                                    return re.test(email);
                                 }
 
 

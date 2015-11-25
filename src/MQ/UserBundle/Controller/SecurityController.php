@@ -22,14 +22,16 @@ class SecurityController extends Controller
         }
         $authenticationUtils = $this->get('security.authentication_utils');
 
-        return $this->render('MQUserBundle:Security:login.html.twig', array(
+        return $this->render('MQQuiziBundle:Default:index.html.twig', array(
             'last_username' => $authenticationUtils->getLastUsername(),
-            'error'         => $authenticationUtils->getLastAuthenticationError(),
+            'error_login' => "Nom d'utilisateur ou mot de passe incorrect",
         ));
     }
 
+    /*
+     *  Inscription utilisateur
+     */
     public function inscriptionAction(Request $request){
-
 
         // Récupération des données envoyées par le formulaire d'inscription
         $request   = $this->container->get('request_stack')->getCurrentRequest();
@@ -42,11 +44,10 @@ class SecurityController extends Controller
         // Récupérations des users de la base de données
         // pour comparer l'existant
         $repository = $this->getDoctrine()->getRepository('MQUserBundle:User');
-        $users = $repository->findAll();
+        $users      = $repository->findAll();
 
-        $userDejaUtilise = false;
-        $passNonIdentitque = false;
-        $mailDelaUtilise = false;
+        $userDejaUtilise   = false;
+        $mailDelaUtilise   = false;
 
         foreach ( $users as $userCourant ) {
             if ( $userCourant->getUsername() == $username ) {
@@ -57,81 +58,80 @@ class SecurityController extends Controller
             }
         }
 
-
         // On vérifie si le login n'est pas déjà utilisé
         if ( $userDejaUtilise ) {
 
             return $this->render('MQQuiziBundle:Default:index.html.twig', array(
-                'error' => 'Utilisateur déjà utilisé'
+                'error_inscription' => 'Utilisateur déjà utilisé'
             ));
-
         } else {
+
             // On vérifie que les mots de passes sont les même
             if ( $password != $password2 ) {
                 return $this->render('MQQuiziBundle:Default:index.html.twig', array(
-                    'error' => 'Mots de passe différents'
+                    'error_inscription' => 'Mots de passe différents'
                 ));
             }else{
 
-
-                // On vérifie le mail n'est pas déjà utilisé
-                if ($mailDelaUtilise) {
+                // On vérifie le format du mail
+                if ( !filter_var( $mail, FILTER_VALIDATE_EMAIL ) ) {
 
                     return $this->render("MQQuiziBundle:Default:index.html.twig", array(
-                        'error' => 'Mail déjà utilisé'
+                        'error_inscription' => 'Format du mail incorrect : ****@***.**'
                     ));
 
-                } else {
+                }else{
 
-                    // Création de l'utilisateur
-                    $user = new User();
-                    // Attribution des attributs
-                    $user->setRoles(array('ROLE_USER'));
-                    $user->setUsername($username);
-                    $user->setMail($mail);
+                    // On vérifie le mail n'est pas déjà utilisé
+                    if ( $mailDelaUtilise ) {
 
-                    // Encodage du mot de passe
-                    $encoder = $this->container->get('security.password_encoder');
-                    $encoded = $encoder->encodePassword($user, $password);
-                    $user->setPassword($encoded);
+                        return $this->render("MQQuiziBundle:Default:index.html.twig", array(
+                            'error_inscription' => 'Mail déjà utilisé'
+                        ));
 
-                    // Enregistrement sur la BDD
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($user);
-                    $em->flush();
-
-
-                    if (!$user) {
-                        throw new UsernameNotFoundException("User not found");
                     } else {
-                        $token = new UsernamePasswordToken($user, null, "main", $user->getRoles());
-                        $this->get("security.context")->setToken($token); //now the user is logged in
 
-                        //now dispatch the login event
-                        $request = $this->get("request");
-                        $event = new InteractiveLoginEvent($request, $token);
-                        $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+                        // Création de l'utilisateur
+                        $user = new User();
+
+                        // Attribution des attributs
+                        $user->setRoles(array('ROLE_USER'));
+                        $user->setUsername($username);
+                        $user->setMail($mail);
+
+                        // Encodage du mot de passe
+                        $encoder = $this->container->get('security.password_encoder');
+                        $encoded = $encoder->encodePassword($user, $password);
+                        $user->setPassword($encoded);
+
+                        // Enregistrement sur la BDD
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($user);
+                        $em->flush();
+
+                        if ( !$user ) {
+
+                            throw new UsernameNotFoundException("User not found");
+                        } else {
+
+                            $token = new UsernamePasswordToken($user, null, "main", $user->getRoles());
+                            $this->get("security.context")->setToken($token);
+
+                            // Log le user inscrit
+                            $request = $this->get("request");
+                            $event = new InteractiveLoginEvent($request, $token);
+                            $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+                        }
+
+                        return $this->redirect($this->generateUrl('mq_quizi_homepage'));
                     }
-
-                    $form = $this->createFormBuilder($user, array('csrf_protection' => false))
-                        ->setAction($this->generateUrl('login'))
-                        ->setMethod('POST')
-                        ->add('username', 'text', array('data' => $username))
-                        ->add('password', 'password', array('data' => $password))
-                        ->getForm();
-                    // $form->submit($request->request->get($form->getName()));
-
-                    return $this->redirect($this->generateUrl('mq_quizi_homepage'));
                 }
+
             }
+            return $this->render("MQQuiziBundle:Default:index.html.twig");
         }
-
-
-        return $this->render('MQUserBundle:Security:inscription.html.twig', array(
-            'form' => $form->createView(),
-        ));
-
     }
+
 
     /*
      *  Affichage des utilisateurs

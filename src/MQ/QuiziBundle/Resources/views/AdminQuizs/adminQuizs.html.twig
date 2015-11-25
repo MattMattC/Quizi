@@ -16,10 +16,14 @@
     <div class="container">
 
         <br>
-        <h4 class="black-text">Mes Quiz's</h4>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <h4 class="black-text">Administration des Quiz's</h4>
+        {% else %}
+            <h4 class="black-text">Administration de mes Quiz's</h4>
+        {% endif %}
 
         <div class="section">
-
 
             <table>
 
@@ -27,7 +31,9 @@
                 <tr>
                     <th data-field="date">Date</th>
                     <th data-field="quiz">Quiz</th>
-                    <th data-field="modif">Modifier</th>
+                    {% if not is_granted('ROLE_ADMIN') %}
+                        <th data-field="modif">Modifier</th>
+                    {% endif %}
                     <th data-field="supr">Supprimer</th>
 
                 </tr>
@@ -40,7 +46,9 @@
                     <tr>
                         <td><span class="thin">{{ quiz.dateCreationQuiz|date('d/m/Y') }}</span></td>
                         <td>{{ quiz.titreQuiz }}</td>
-                        <td><a href="#" class="btn waves-effect">Modifier</a></td>
+                        {% if not is_granted('ROLE_ADMIN') %}
+                            <td><a href="#" class="btn waves-effect">Modifier</a></td>
+                        {% endif %}
                         <td><a href="#" class="btn waves-effect">Supprimer</a></td>
 
                     </tr>
@@ -52,6 +60,18 @@
             </table>
 
         </div>
+
+        {% if not is_granted('ROLE_ADMIN') %}
+
+            <div class="row center">
+
+                <a href="#!" class="waves-effect waves-circle waves-light btn-floating secondary-content">
+                    <i class="material-icons">add</i>
+                </a>
+
+            </div>
+
+        {% endif %}
 
     </div>
 

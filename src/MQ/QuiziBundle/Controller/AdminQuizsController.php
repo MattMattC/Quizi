@@ -16,7 +16,13 @@ class AdminQuizsController extends Controller
             ->getRepository('MQQuiziBundle:Quiz')
         ;
 
-        $listQuizs = $repository->findAll(); // FAIRE METHODE FIND BY
+
+        // Si on est USER, on récupère la liste des quizs du user
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')){
+            $listQuizs = $repository->findAll();
+        }else{
+            $listQuizs = $repository->findBy(array('user' => $this->get('security.context')->getToken()->getUser() ),null,null,0);
+        }
 
         return $this->render('MQQuiziBundle:AdminQuizs:adminQuizs.html.twig',array('listQuizs' => $listQuizs));
     }

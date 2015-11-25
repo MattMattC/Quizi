@@ -30,7 +30,7 @@ security:
             anonymous: true
             provider: main
             form_login:
-                login_path: /
+                login_path: /login
                 check_path: login_check
             logout:
                 path: logout

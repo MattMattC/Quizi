@@ -1,35 +1,34 @@
-mq_quizi_homepage:
-path: /
-defaults: { _controller: MQQuiziBundle:Default:index }
+mq_user:
+    resource: "@MQUserBundle/Resources/config/routing.yml"
+    prefix: /
 
-mq_quizi_admin_quizs:
-path: /adminQuizs/
-defaults: { _controller: MQQuiziBundle:AdminQuizs:index }
+mq_quizi:
+    resource: "@MQQuiziBundle/Resources/config/routing.yml"
+    prefix: /
 
-mq_quizi_ajout_quizs:
-path: /adminQuizs/ajout/
-defaults: { _controller: MQQuiziBundle:AdminQuizs:ajout }
+app:
+    resource: "@AppBundle/Controller/"
+    type: annotation
 
-mq_quizi_modif_questions_quizs:
-path: /adminQuizs/modif/{idQuiz}
-defaults: { _controller: MQQuiziBundle:AdminQuizs:modifQuestions }
+login:
+    path: /login
+    defaults: { _controller: MQUserBundle:Security:login }
 
-mq_quizi_quizs:
-path: /quizs/
-defaults: { _controller: MQQuiziBundle:Quizs:indexQuiz }
+login_check:
+    path: /login_check
 
-mq_quizi_view_quizs:
-path: /quizs/{idQuiz}
-defaults: { _controller: MQQuiziBundle:Quizs:viewQuiz}
-requirements:
-idQuiz: \d+
+logout:
+    path: /logout
 
-mq_quizi_rep_quizs:
-path: /quizs/rep/{idQuiz}
-defaults: { _controller: MQQuiziBundle:Reponse:repQuiz}
-requirements:
-idQuiz: \d+
+inscription:
+    path: /inscription
+    defaults: { _controller: MQUserBundle:Security:inscription }
+    methods: [POST]
 
-mq_quizi_resultat_quizs:
-path: /quizs/res
-defaults: { _controller: MQQuiziBundle:Resultat:resultatQuiz}
+gestion_user:
+    path: /gestion_utilisateur
+    defaults: { _controller: MQUserBundle:Security:gestionUser}
+
+delete_user:
+    path: /delete_utilisateur/{id}
+    defaults: { _controller: MQUserBundle:Security:deleteUser}

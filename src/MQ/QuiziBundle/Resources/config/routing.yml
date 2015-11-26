@@ -6,6 +6,8 @@ mq_quizi_admin_quizs:
     path:     /adminQuizs/
     defaults: { _controller: MQQuiziBundle:AdminQuizs:index }
 
+<<<<<<< HEAD
+=======
 mq_quizi_ajout_quizs:
     path:     /adminQuizs/ajout/
     defaults: { _controller: MQQuiziBundle:AdminQuizs:ajout }
@@ -36,6 +38,7 @@ mq_quizi_suppr_questions_quizs:
         idQuiz: \d+
         idQuestion: \d+
 
+>>>>>>> 896b0c783a0f32ce57057e715750ad4a658b5d42
 mq_quizi_quizs:
     path:     /quizs/
     defaults: { _controller: MQQuiziBundle:Quizs:indexQuiz }

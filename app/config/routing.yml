@@ -1,34 +1,34 @@
 mq_user:
     resource: "@MQUserBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix: /
 
 mq_quizi:
     resource: "@MQQuiziBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix: /
 
 app:
     resource: "@AppBundle/Controller/"
-    type:     annotation
+    type: annotation
 
 login:
-    path:   /login
-    defaults:  { _controller: MQUserBundle:Security:login }
+    path: /login
+    defaults: { _controller: MQUserBundle:Security:login }
 
 login_check:
-    path:   /login_check
+    path: /login_check
 
 logout:
-    path:   /logout
+    path: /logout
 
 inscription:
-    path:   /inscription
-    defaults:   { _controller: MQUserBundle:Security:inscription }
-    methods:  [POST]
+    path: /inscription
+    defaults: { _controller: MQUserBundle:Security:inscription }
+    methods: [POST]
 
 gestion_user:
-    path:    /gestion_utilisateur
-    defaults:  { _controller: MQUserBundle:Security:gestionUser}
+    path: /gestion_utilisateur
+    defaults: { _controller: MQUserBundle:Security:gestionUser}
 
 delete_user:
-    path:   /delete_utilisateur/{id}
-    defaults:  { _controller: MQUserBundle:Security:deleteUser}
+    path: /delete_utilisateur/{id}
+    defaults: { _controller: MQUserBundle:Security:deleteUser}

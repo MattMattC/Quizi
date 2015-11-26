@@ -1,0 +1,150 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}Modification Quiz{% endblock %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+    {{ parent() }}
+
+    <div class="container">
+
+        <br>
+        <h4 class="black-text">Modifier un quiz</h4>
+        <br>
+
+        <!-- Si il existe une erreur, on l'affiche -->
+        {% if error is defined %}
+
+            <div class="red">
+                <br>
+                <h6 class="center black-text">{{ error }}</h6>
+                <br>
+            </div>
+            <br>
+
+        {% endif %}
+
+
+        {{ form_start(form) }}
+
+        <ul class="collapsible" data-collapsible="expandable">
+
+            <!-- Informations du quiz -->
+            <li>
+                <div class="collapsible-header grey lighten-4"><i class="material-icons">description</i>Informations du Quiz</div>
+                <div class="collapsible-body">
+
+                    <div class="section">
+
+                        <h6>Nom du Quiz *</h6>
+                        {{ form_widget(form.nomQuiz) }}
+
+                        <h6>Type d'afichage de résultat *</h6>
+
+                        <div class="center">
+                            {{ form_widget(form.affichageFinal) }}
+                            <br>
+                            {{ form_row(form.btnModifInfoQuiz) }}<br>
+                        </div>
+
+                    </div>
+
+                </div>
+            </li>
+
+
+
+            <!-- Liste des questions du quiz -->
+            <li>
+                <div class="collapsible-header grey lighten-4"><i class="material-icons">list</i>Liste des questions du quiz</div>
+                <div class="collapsible-body">
+
+                    <ul class="collection">
+
+
+                        {% for question in listQuestions %}
+
+                            <li class="collection-item">
+                                <div>
+                                    {{ question.titreQuestion }}
+                                    <a href="{{ path('mq_quizi_suppr_questions_quizs',{'idQuiz' : quiz.id, 'idQuestion' : question.id}) }}" class="secondary-content" onclick="return confirm('Etes vous sûr de vouloir supprimer cette question ?')"><i class="material-icons">delete</i></a>
+                                    <a href="{{ path('mq_quizi_modif_questions_quizs',{'idQuiz' : quiz.id, 'idQuestion' : question.id}) }}" class="secondary-content"><i class="material-icons">mode_edit</i></a>
+                                </div>
+                            </li>
+
+                        {% endfor %}
+
+
+                    </ul>
+
+                </div>
+            </li>
+
+
+            <!-- Ajouter une question -->
+            <li>
+                <div class="collapsible-header grey lighten-4"><i class="material-icons">add_circle</i>Ajouter une question</div>
+                <div class="collapsible-body">
+
+                    <br>
+                    <h6>Nom de la Question *</h6>
+                    {{ form_widget(form.nomQuestion) }}
+
+                    <div class="row">
+
+                        <div class=" col s12 m6">
+                            <h6>Réponse 1 *</h6>
+                            {{ form_widget(form.rep1) }}
+                        </div>
+
+                        <div class=" col s12 m6">
+                            <h6>Réponse 2 *</h6>
+                            {{ form_widget(form.rep2) }}
+                        </div>
+
+                        <div class=" col s12 m6">
+                            <h6>Réponse 3</h6>
+                            {{ form_widget(form.rep3) }}
+                        </div>
+
+                        <div class=" col s12 m6">
+                            <h6>Réponse 4</h6>
+                            {{ form_widget(form.rep4) }}
+                        </div>
+
+                    </div>
+
+                    <div class="center">
+
+                        <h6>Quel est la réponse correcte ? *</h6>
+                        {{ form_widget(form.reponseCorrect) }}
+
+                    </div>
+                    <br>
+                    <h6 class="center thin">* : champs obligatoires</h6>
+
+                    <div class="center">
+
+                        <br>{{ form_row(form.btnAddQuestion) }}<br>
+
+                    </div>
+
+
+                </div>
+            </li>
+        </ul>
+
+
+        {{ form_end(form) }}
+
+
+    </div>
+
+{% endblock %}

@@ -47,9 +47,9 @@
                         <td><span class="thin">{{ quiz.dateCreationQuiz|date('d/m/Y') }}</span></td>
                         <td>{{ quiz.titreQuiz }}</td>
                         {% if not is_granted('ROLE_ADMIN') %}
-                            <td><a href="#" class="btn waves-effect">Modifier</a></td>
+                            <td><a href="{{ path('mq_quizi_modif_quizs',{'idQuiz' : quiz.id } ) }}" class="btn waves-effect">Modifier</a></td>
                         {% endif %}
-                        <td><a href="#" class="btn waves-effect">Supprimer</a></td>
+                        <td><a href="{{ path('mq_quizi_suppr_quizs',{'idQuiz' : quiz.id } ) }}" class="btn waves-effect" onclick="return confirm('Etes vous sûr de vouloir supprimer ce quiz ?')">Supprimer</a></td>
 
                     </tr>
 

@@ -10,9 +10,31 @@ mq_quizi_ajout_quizs:
     path:     /adminQuizs/ajout/
     defaults: { _controller: MQQuiziBundle:AdminQuizs:ajout }
 
-mq_quizi_ajout_questions_quizs:
-    path:     /adminQuizs/ajout/{idQuiz}
-    defaults: { _controller: MQQuiziBundle:AdminQuizs:ajoutQuestions }
+mq_quizi_modif_quizs:
+    path:     /adminQuizs/modif/{idQuiz}
+    defaults: { _controller: MQQuiziBundle:AdminQuizs:modifQuiz }
+    requirements:
+        idQuiz: \d+
+
+mq_quizi_suppr_quizs:
+    path:     /adminQuizs/suppr/{idQuiz}
+    defaults: { _controller: MQQuiziBundle:AdminQuizs:supprimerQuiz }
+    requirements:
+        idQuiz: \d+
+
+mq_quizi_modif_questions_quizs:
+    path:     /adminQuizs/modif/{idQuiz}/que/{idQuestion}
+    defaults: { _controller: MQQuiziBundle:AdminQuizs:modifierQuestions }
+    requirements:
+        idQuiz: \d+
+        idQuestion: \d+
+
+mq_quizi_suppr_questions_quizs:
+    path:     /adminQuizs/modif/{idQuiz}/supr/{idQuestion}
+    defaults: { _controller: MQQuiziBundle:AdminQuizs:supprimerQuestions }
+    requirements:
+        idQuiz: \d+
+        idQuestion: \d+
 
 mq_quizi_quizs:
     path:     /quizs/

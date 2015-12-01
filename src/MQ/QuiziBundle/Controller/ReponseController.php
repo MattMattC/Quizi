@@ -22,7 +22,7 @@ class ReponseController extends Controller
             ->find($idQuiz)
         ;
 
-        if (null === $quiz) {
+        if ( null === $quiz ) {
             throw new NotFoundHttpException("Le quiz id = ".$idQuiz." n'existe pas.");
         }
 
@@ -32,39 +32,40 @@ class ReponseController extends Controller
             ->findBy(array('quiz' => $quiz))
         ;
 
-
-
-
         // Creation formulaire
         $data = array();
         $form = $this->createFormBuilder($data);
 
         // On parcours chaque questions
-        for($i = 1 ; $i <= sizeof($listQuestions) ; $i++){
+        for( $i = 1 ; $i <= sizeof( $listQuestions ) ; $i++ ) {
 
             $listeReponses = array();
 
             // On parcours chaque réponses pour chaque question
-            for($j = 0 ; $j < sizeof($listQuestions[$i-1]->getReponses()) ; $j++ ){
+            $tailleReponse = sizeof($listQuestions[$i-1]->getReponses());
+            for($j = 0 ; $j < $tailleReponse ; $j++ ) {
 
                 $reponse = $listQuestions[$i-1]->getReponses()[$j];
                 $listeReponses[$reponse->getId()] = $reponse->getTitreReponse();
-
             }
 
 
             $form = $form->add('question' . $i, 'choice', array(
-                'choices' => $listeReponses,
-                'multiple' => false, 'expanded' => true, 'attr' => array('onclick' => 'checkQuestion(' . $i . ');')
-            ));
+                    'choices' => $listeReponses,
+                    'multiple' => false, 'expanded' => true, 'attr' => array(
+                        'onclick' => 'checkQuestion(' . $i . ');'
+                    )
+                )
+            );
 
         }
 
-        $form = $form->add('save', 'submit', array('label' => 'Valider', 'attr' => array('class' => 'btn waves-effect waves-light')));
+        $form = $form->add('save', 'submit', array(
+                'label' => 'Valider', 'attr' => array(
+                    'class' => 'btn waves-effect waves-light')
+            )
+        );
         $form = $form->getForm();
-
-
-
 
 
         // Si on à valider le formulaire !
@@ -81,9 +82,9 @@ class ReponseController extends Controller
             for($i = 0 ; $i < sizeof($listQuestions) ; $i++){
 
                 $resQuestion = new ResultatUtilisateurQuestion(
-                                    $listQuestions[$i]->getId(),
-                                    $listQuestions[$i]->getTitreQuestion(),
-                                    $data['question'.($i+1)]);
+                    $listQuestions[$i]->getId(),
+                    $listQuestions[$i]->getTitreQuestion(),
+                    $data['question'.($i+1)]);
 
 
                 for($j = 0 ; $j < sizeof($listQuestions[$i]->getReponses()) ; $j++){

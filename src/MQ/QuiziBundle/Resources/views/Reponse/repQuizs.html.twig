@@ -22,9 +22,7 @@
         <h6 class="thin">Bonne chance :)</h6>
 
         <div class="section">
-
             {{ form_start(form) }}
-
                 <!-- Liste des questions -->
                 <ul class="collapsible" data-collapsible="accordion">
 
@@ -41,6 +39,9 @@
                                 {% set numQuestion = 'question' ~ loop.index %}
 
                                 <div class="row center">
+                                    {% for reponse in question.reponses %}
+                                        {{ reponse.titreReponse|raw }}
+                                    {% endfor %}
 
                                     {{ form_widget(attribute(form, numQuestion))|raw }}
 

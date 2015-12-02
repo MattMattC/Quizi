@@ -101,83 +101,34 @@ class AdminQuizsController extends Controller
                         return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView(),'error' => 'Vous avez coché une réponse correcte qui est vide'));
 
                     }else{
+                        if( $this->regexScript($data['rep1']) && $this->regexScript($data['rep2']) &&
+                            $this->regexScript($data['rep3']) && $this->regexScript($data['rep4'])){
 
+                                echo $this->regexScript($data['rep1'])."\n";
+                                echo $this->regexScript($data['rep3'])."\n";
+                            // On ajoute la question et on redemande le formulaire
+                            if ($form->get('btnCreer')->isClicked()) {
 
-                        // On ajoute la question et on redemande le formulaire
-                        if($form->get('btnCreer')->isClicked()){
+                                $em = $this->getDoctrine()->getManager();
 
+                                $quiz = new Quiz();
+                                $quiz->setTitreQuiz($data['nomQuiz']);
+                                $quiz->setAffichageFinalQuiz($data['affichageFinal']);
+                                date_default_timezone_set('UTC');
+                                $date = date('d-m-Y');
+                                $quiz->setDateCreationQuiz(new \DateTime($date));
+                                $quiz->setUser($this->get('security.context')->getToken()->getUser());
 
-                            $em = $this->getDoctrine()->getManager();
+                                // Ajout du quiz dans la BDD
+                                $em->persist($quiz);
+                                $em->flush();
 
-                            $quiz = new Quiz();
-                            $quiz->setTitreQuiz($data['nomQuiz']);
-                            $quiz->setAffichageFinalQuiz($data['affichageFinal']);
-                            date_default_timezone_set('UTC');
-                            $date = date('d-m-Y');
-                            $quiz->setDateCreationQuiz(new \DateTime($date));
-                            $quiz->setUser($this->get('security.context')->getToken()->getUser());
+                                $this->addOrUpdateQuestion($quiz, $data);
 
-                            // Ajout du quiz dans la BDD
-                            $em->persist($quiz);
-                            $em->flush();
+                                return $this->redirect($this->generateUrl('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId())));
 
-
-                            $question = new Question();
-                            $question->setTitreQuestion($data['nomQuestion']);
-                            $question->setQuiz($quiz);
-
-
-                            $reponse1 = new Reponse();
-                            $reponse1->setTitreReponse($data['rep1']);
-
-                            $reponse2 = new Reponse();
-                            $reponse2->setTitreReponse($data['rep2']);
-
-                            if($data['reponseCorrect'] == 1)
-                                $reponse1->setBonneReponse(1);
-                            else
-                                $reponse1->setBonneReponse(0);
-                            if($data['reponseCorrect'] == 2)
-                                $reponse2->setBonneReponse(1);
-                            else
-                                $reponse2->setBonneReponse(0);
-
-                            $question->addReponse($reponse1);
-                            $question->addReponse($reponse2);
-
-                            $em->persist($reponse1);
-                            $em->persist($reponse2);
-
-                            if($data['rep3'] != null){
-                                $reponse3 = new Reponse();
-                                $reponse3->setTitreReponse($data['rep3']);
-                                if($data['reponseCorrect'] == 3)
-                                    $reponse3->setBonneReponse(1);
-                                else
-                                    $reponse3->setBonneReponse(0);
-                                $question->addReponse($reponse3);
-                                $em->persist($reponse3);
                             }
-
-                            if($data['rep4'] != null){
-                                $reponse4 = new Reponse();
-                                $reponse4->setTitreReponse($data['rep4']);
-                                if($data['reponseCorrect'] == 4)
-                                    $reponse4->setBonneReponse(1);
-                                else
-                                    $reponse4->setBonneReponse(0);
-                                $question->addReponse($reponse4);
-                                $em->persist($reponse4);
-                            }
-
-                            // Ajout de la question dans la BDD
-                            $em->persist($question);
-                            $em->flush();
-
-                            return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
-
                         }
-
 
                     }
 
@@ -292,33 +243,8 @@ class AdminQuizsController extends Controller
         ;
 
 
-
-
         // Creation formulaire
-        $data = array();
-        $form = $this->createFormBuilder($data);
-
-        $form = $form->add('nomQuiz','text',array('data' => $quiz->getTitreQuiz()));
-        $form = $form->add('affichageFinal', 'choice', array(
-            'choices' => array('1' => 'Score', '2' => 'Score + Résultat par question','3' => 'Score + Résultat par question + Bonne réponse'),
-            'multiple' => false, 'expanded' => true, 'data' => $quiz->getAffichageFinalQuiz()
-        ));
-
-        $form = $form->add('nomQuestion','text');
-        $form = $form->add('rep1','text');
-        $form = $form->add('rep2','text');
-        $form = $form->add('rep3','text', array('required' => false));
-        $form = $form->add('rep4','text', array('required' => false));
-
-        $form = $form->add('reponseCorrect', 'choice', array(
-            'choices' => array('1' => 'Réponse 1', '2' => 'Réponse 2','3' => 'Réponse 3', '4' => 'Réponse 4'),
-            'multiple' => false, 'expanded' => true
-        ));
-
-        $form = $form->add('btnModifInfoQuiz', 'submit', array('label' => 'Modifier', 'attr' => array('class' => 'btn waves-effect waves-light')));
-        $form = $form->add('btnAddQuestion', 'submit', array('label' => 'Ajouter une question', 'attr' => array('class' => 'btn waves-effect waves-light')));
-        $form = $form->getForm();
-
+        $form = $this->getFormulaire($quiz);
 
 
 
@@ -354,10 +280,7 @@ class AdminQuizsController extends Controller
                         return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView(),'error' => 'Modification non effectuée : certains champs étaient vides'));
 
                     }
-
                 }
-
-
 
                 // Ajout d'une question pour un quiz
                 if ($form->get('btnAddQuestion')->isClicked()) {
@@ -375,59 +298,7 @@ class AdminQuizsController extends Controller
 
                         }else{
 
-                            $em = $this->getDoctrine()->getManager();
-
-                            $question = new Question();
-                            $question->setTitreQuestion($data['nomQuestion']);
-                            $question->setQuiz($quiz);
-
-
-                            $reponse1 = new Reponse();
-                            $reponse1->setTitreReponse($data['rep1']);
-
-                            $reponse2 = new Reponse();
-                            $reponse2->setTitreReponse($data['rep2']);
-
-                            if($data['reponseCorrect'] == 1)
-                                $reponse1->setBonneReponse(1);
-                            else
-                                $reponse1->setBonneReponse(0);
-                            if($data['reponseCorrect'] == 2)
-                                $reponse2->setBonneReponse(1);
-                            else
-                                $reponse2->setBonneReponse(0);
-
-                            $question->addReponse($reponse1);
-                            $question->addReponse($reponse2);
-
-                            $em->persist($reponse1);
-                            $em->persist($reponse2);
-
-                            if($data['rep3'] != null){
-                                $reponse3 = new Reponse();
-                                $reponse3->setTitreReponse($data['rep3']);
-                                if($data['reponseCorrect'] == 3)
-                                    $reponse3->setBonneReponse(1);
-                                else
-                                    $reponse3->setBonneReponse(0);
-                                $question->addReponse($reponse3);
-                                $em->persist($reponse3);
-                            }
-
-                            if($data['rep4'] != null){
-                                $reponse4 = new Reponse();
-                                $reponse4->setTitreReponse($data['rep4']);
-                                if($data['reponseCorrect'] == 4)
-                                    $reponse4->setBonneReponse(1);
-                                else
-                                    $reponse4->setBonneReponse(0);
-                                $question->addReponse($reponse4);
-                                $em->persist($reponse4);
-                            }
-
-                            // Ajout de la question dans la BDD
-                            $em->persist($question);
-                            $em->flush();
+                            $this->addOrUpdateQuestion($quiz, $data);
 
                             return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
 
@@ -454,7 +325,62 @@ class AdminQuizsController extends Controller
         return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView()));
 
     }
+    public function addOrUpdateQuestion($quiz, $data){
 
+        $em = $this->getDoctrine()->getManager();
+
+        $question = new Question();
+        $question->setTitreQuestion($data['nomQuestion']);
+        $question->setQuiz($quiz);
+
+
+        $reponse1 = new Reponse();
+        $reponse1->setTitreReponse($data['rep1']);
+
+        $reponse2 = new Reponse();
+        $reponse2->setTitreReponse($data['rep2']);
+
+        if($data['reponseCorrect'] == 1)
+            $reponse1->setBonneReponse(1);
+        else
+            $reponse1->setBonneReponse(0);
+        if($data['reponseCorrect'] == 2)
+            $reponse2->setBonneReponse(1);
+        else
+            $reponse2->setBonneReponse(0);
+
+        $question->addReponse($reponse1);
+        $question->addReponse($reponse2);
+
+        $em->persist($reponse1);
+        $em->persist($reponse2);
+
+        if($data['rep3'] != null){
+            $reponse3 = new Reponse();
+            $reponse3->setTitreReponse($data['rep3']);
+            if($data['reponseCorrect'] == 3)
+                $reponse3->setBonneReponse(1);
+            else
+                $reponse3->setBonneReponse(0);
+            $question->addReponse($reponse3);
+            $em->persist($reponse3);
+        }
+
+        if($data['rep4'] != null){
+            $reponse4 = new Reponse();
+            $reponse4->setTitreReponse($data['rep4']);
+            if($data['reponseCorrect'] == 4)
+                $reponse4->setBonneReponse(1);
+            else
+                $reponse4->setBonneReponse(0);
+            $question->addReponse($reponse4);
+            $em->persist($reponse4);
+        }
+
+        // Ajout de la question dans la BDD
+        $em->persist($question);
+        $em->flush();
+    }
 
     /*
      *
@@ -648,32 +574,15 @@ class AdminQuizsController extends Controller
                                 return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
 
                             }
-
                         }else{
-
                             return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuestion.html.twig', array('form' => $form->createView(),'error' => 'Question non modifiée : certains champs étaient vides'));
-
                         }
-
                     }
-
-
                 }else{
-
                     return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView(),'error' => 'Formulaire non valide'));
-
                 }
-
             }
-
-
-
-
             return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuestion.html.twig', array('form' => $form->createView()));
-
-
-
-
         }else{
             throw new NotFoundHttpException("La question = ".$idQuestion." n'appartient pas au quiz actuel.");
         }
@@ -735,17 +644,12 @@ class AdminQuizsController extends Controller
 
             if($q == $question)
                 $bool = true;
-
         }
-
 
         // Si la question appartient bien au quiz actuel, on supprime
         if($bool == true){
-
             // Si la liste des questions est différente de 1, on peut supprimer
             if(sizeof($listQuestions) != 1){
-
-
                 $em = $this->getDoctrine()->getManager();
 
                 foreach($question->getReponses() as $rep)
@@ -754,22 +658,53 @@ class AdminQuizsController extends Controller
                 $em->flush();
 
             }else{
-
                 return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
-
             }
-
-
         }else{
             throw new NotFoundHttpException("La question = ".$idQuestion." n'appartient pas au quiz actuel.");
         }
-
-
         return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
-
-
     }
 
+
+
+    public function getFormulaire($quiz){
+
+        $data = array();
+        $form = $this->createFormBuilder($data);
+
+        $form = $form->add('nomQuiz','text',array('data' => $quiz->getTitreQuiz()));
+        $form = $form->add('affichageFinal', 'choice', array(
+            'choices' => array('1' => 'Score', '2' => 'Score + Résultat par question','3' => 'Score + Résultat par question + Bonne réponse'),
+            'multiple' => false, 'expanded' => true, 'data' => $quiz->getAffichageFinalQuiz()
+        ));
+
+        $form = $form->add('nomQuestion','text');
+        $form = $form->add('rep1','text');
+        $form = $form->add('rep2','text');
+        $form = $form->add('rep3','text', array('required' => false));
+        $form = $form->add('rep4','text', array('required' => false));
+
+        $form = $form->add('reponseCorrect', 'choice', array(
+            'choices' => array('1' => 'Réponse 1', '2' => 'Réponse 2','3' => 'Réponse 3', '4' => 'Réponse 4'),
+            'multiple' => false, 'expanded' => true
+        ));
+
+        $form = $form->add('btnModifInfoQuiz', 'submit', array('label' => 'Modifier', 'attr' => array('class' => 'btn waves-effect waves-light')));
+        $form = $form->add('btnAddQuestion', 'submit', array('label' => 'Ajouter une question', 'attr' => array('class' => 'btn waves-effect waves-light')));
+        $form = $form->getForm();
+        return $form;
+    }
+
+    public function regexScript($text){
+        $re = "/<script.*>.*<\\/script>/";
+
+        if(preg_match($re, $text)){
+            return false;
+        }else{
+            return true;
+        }
+    }
 
 }
 

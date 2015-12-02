@@ -32,9 +32,9 @@
                     <th data-field="date">Date</th>
                     <th data-field="quiz">Quiz</th>
                     {% if not is_granted('ROLE_ADMIN') %}
-                        <th data-field="modif">Modifier</th>
+                        <th data-field="modif" class="center-align">Modifier</th>
                     {% endif %}
-                    <th data-field="supr">Supprimer</th>
+                    <th data-field="supr" class="center-align">Supprimer</th>
 
                 </tr>
                 </thead>
@@ -45,11 +45,18 @@
 
                     <tr>
                         <td><span class="thin">{{ quiz.dateCreationQuiz|date('d/m/Y') }}</span></td>
-                        <td>{{ quiz.titreQuiz }}</td>
+                        <td >{{ quiz.titreQuiz }}</td>
                         {% if not is_granted('ROLE_ADMIN') %}
-                            <td><a href="{{ path('mq_quizi_modif_quizs',{'idQuiz' : quiz.id } ) }}" class="btn waves-effect">Modifier</a></td>
+                            <td class="center-align">
+                                <a href="{{ path('mq_quizi_modif_quizs',{'idQuiz' : quiz.id } ) }}" class="hide-on-large-only">
+                                    <i class="material-icons">settings</i>
+                                </a>
+                            <a href="{{ path('mq_quizi_modif_quizs',{'idQuiz' : quiz.id } ) }}" class="btn waves-effect hide-on-med-and-down">Modifier</a></td>
                         {% endif %}
-                        <td><a href="{{ path('mq_quizi_suppr_quizs',{'idQuiz' : quiz.id } ) }}" class="btn waves-effect" onclick="return confirm('Etes vous sûr de vouloir supprimer ce quiz ?')">Supprimer</a></td>
+                        <td class="center-align"><a href="{{ path('mq_quizi_suppr_quizs',{'idQuiz' : quiz.id } ) }}" class="hide-on-large-only" onclick="return confirm('Etes vous sûr de vouloir supprimer ce quiz ?')">
+                                <i class="material-icons">delete</i>
+                            </a>
+                            <a href="{{ path('mq_quizi_suppr_quizs',{'idQuiz' : quiz.id } ) }}" class="btn waves-effect hide-on-med-and-down" onclick="return confirm('Etes vous sûr de vouloir supprimer ce quiz ?')">Supprimer</a></td>
 
                     </tr>
 

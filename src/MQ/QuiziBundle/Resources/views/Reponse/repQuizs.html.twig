@@ -23,46 +23,49 @@
 
         <div class="section">
             {{ form_start(form) }}
-                <!-- Liste des questions -->
-                <ul class="collapsible" data-collapsible="accordion">
+            <!-- Liste des questions -->
+            <ul class="collapsible" data-collapsible="accordion">
 
-                    {% for question in listQuestions %}
+                {% for question in listQuestions %}
 
-                        <li>
-                            <div class="collapsible-header"><i id="checkQuestion{{ loop.index }}" class="material-icons">check_circle</i>Question {{ loop.index }}</div>
-                            <div class="collapsible-body">
+                    <li>
+                        <div class="collapsible-header"><i id="checkQuestion{{ loop.index }}" class="material-icons">check_circle</i>Question {{ loop.index }}</div>
+                        <div class="collapsible-body">
 
-                                <br>
-                                <h5 class="center-align">{{ question.titreQuestion }}</h5>
-                                <br>
+                            <br>
+                            <h5 class="center-align">{{ question.titreQuestion }}</h5>
+                            <br>
 
-                                {% set numQuestion = 'question' ~ loop.index %}
-
-                                <div class="row center">
-                                    {% for reponse in question.reponses %}
+                            {% set numQuestion = 'question' ~ loop.index %}
+                            <div class="row">
+                                {% for reponse in question.reponses %}
+                                    <div class="col s12 m6 l6 center-align">
                                         {{ reponse.titreReponse|raw }}
-                                    {% endfor %}
-
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="divider"></div><br>
+                            <div class="row center">
+                                <div class="col s12">
                                     {{ form_widget(attribute(form, numQuestion))|raw }}
-
                                 </div>
 
-
-
-                                <br>
-
                             </div>
-                        </li>
 
-                    {% endfor %}
+                            <br>
 
-                </ul>
+                        </div>
+                    </li>
 
-                <div class="center">
+                {% endfor %}
 
-                    {{ form_row(form.save, { 'label': 'Valider' }) }}
+            </ul>
 
-                </div>
+            <div class="center">
+
+                {{ form_row(form.save, { 'label': 'Valider' }) }}
+
+            </div>
 
             {{ form_end(form, {'render_rest': false}) }}
 

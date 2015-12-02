@@ -104,8 +104,6 @@ class AdminQuizsController extends Controller
                         if( $this->regexScript($data['rep1']) && $this->regexScript($data['rep2']) &&
                             $this->regexScript($data['rep3']) && $this->regexScript($data['rep4'])){
 
-                                echo $this->regexScript($data['rep1'])."\n";
-                                echo $this->regexScript($data['rep3'])."\n";
                             // On ajoute la question et on redemande le formulaire
                             if ($form->get('btnCreer')->isClicked()) {
 
@@ -128,6 +126,8 @@ class AdminQuizsController extends Controller
                                 return $this->redirect($this->generateUrl('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId())));
 
                             }
+                        }else{
+                            return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView(),'error' => 'Vous n\'êtes pas autorisé à entrer ce genre de données ...'));
                         }
 
                     }
@@ -297,10 +297,15 @@ class AdminQuizsController extends Controller
                             return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView(),'error' => 'Question non ajoutée : vous avez coché une réponse correcte qui est vide'));
 
                         }else{
+                            if( $this->regexScript($data['rep1']) && $this->regexScript($data['rep2']) &&
+                                $this->regexScript($data['rep3']) && $this->regexScript($data['rep4'])){
 
-                            $this->addOrUpdateQuestion($quiz, $data);
+                                $this->addOrUpdateQuestion($quiz, $data);
+                                return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
+                            }else{
+                                return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView(),'error' => 'Vous n\'êtes pas autorisé à entrer ce genre de données ...'));
+                            }
 
-                            return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
 
                         }
 

@@ -17,9 +17,12 @@
     {% endblock %}
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <script>window.MathJax = { MathML: { extensions: ["mml3.js", "content-mathml.js"]}};</script>
+    <script type="text/javascript" async src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script>
+
 </head>
 <body>
-
+    <main>
 {% block body %}
 
     <!--Menu Navbar-->
@@ -63,7 +66,44 @@
         </nav>
     </div>
 
+
+
 {% endblock %}
+    </main>
+
+
+    <footer class="page-footer white z-depth-2">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="black-text">Quizi !</h5>
+                    <p class="black-text text-lighten-4">Des quiz facile pour tout le monde ;).</p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="black-text">liens</h5>
+                    <ul>
+                        <li><a href="{{ path('mq_quizi_quizs') }}">Les Quiz's</a></li>
+
+                        {% if is_granted('ROLE_USER') %}
+                            <li><a href="{{ path('mq_quizi_admin_quizs') }}">Administrer les Quiz's</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('gestion_user') }}">Administrer les User's</a></li>
+                        {% endif %}
+                        {% if app.user %}
+                            <li><a href="{{ path('logout') }}">Se Déconnecter</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container black-text">
+                © 2014 Copyright Coulon Matthieu
+            </div>
+        </div>
+    </footer>
+
 
 {% block javascripts %}
     <!--Import jQuery before materialize.js-->
@@ -80,6 +120,7 @@
             iconCheck.classList.add('green-text');
 
         }
+
 
 
     </script>

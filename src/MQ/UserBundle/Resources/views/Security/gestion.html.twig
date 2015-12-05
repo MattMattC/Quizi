@@ -36,14 +36,18 @@
             <tbody>
 
             {% for user in users %}
-                <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.mail }}</td>
-                    <td>{{ user.roles[0] }}</td>
-                    <td><a class="waves-effect waves-light btn modal-trigger" href="{{ path('delete_user', {'id': user.id}) }}"
-                           onclick="return confirm('Etes vous sûr de vouloir supprimer cet utilisateur')" >Supprimer</a></td>
-                </tr>
+                {% if user.roles[0] == "ROLE_USER"%}
+
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.mail }}</td>
+                        <td>{{ user.roles[0] }}</td>
+                        <td><a class="waves-effect waves-light btn modal-trigger" href="{{ path('delete_user', {'id': user.id}) }}"
+                               onclick="return confirm('Etes vous sûr de vouloir supprimer cet utilisateur')" >Supprimer</a></td>
+                    </tr>
+
+                {% endif %}
 
             {% endfor %}
 

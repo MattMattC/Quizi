@@ -2719,6 +2719,15 @@
 /*** Typography ***/
 /*** Collections ***/
 /* Progress Bar */
+/* line 1, ../sass/plus.scss */
+.reponse {
+  font-size: 18px;
+  background-color: #f7f7f7;
+  margin: 8px;
+  padding: 10px;
+  box-shadow: 0px 0px 8px #aaa;
+}
+
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 /**
  * 1. Set default font family to sans-serif.
@@ -13041,4 +13050,15 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   .picker--time .picker__box {
     margin-bottom: 5em;
   }
+}
+/* line 44, ../sass/materialize.scss */
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* line 50, ../sass/materialize.scss */
+main {
+  flex: 1 0 auto;
 }

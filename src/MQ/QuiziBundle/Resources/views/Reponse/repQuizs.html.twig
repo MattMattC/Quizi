@@ -39,8 +39,8 @@
                             {% set numQuestion = 'question' ~ loop.index %}
                             <div class="row">
                                 {% for reponse in question.reponses %}
-                                    <div class="col s12 m6 l6 center-align">
-                                        {{ reponse.titreReponse|raw }}
+                                    <div class="col s12 m6 l6">
+                                        <div class="reponse center-align">{{ reponse.titreReponse|raw }} </div>
                                     </div>
                                 {% endfor %}
                             </div>

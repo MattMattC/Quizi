@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+
 // Mixins
 @import "components/prefixer";
 @import "components/mixins";
@@ -7,6 +8,7 @@
 
 // Variables;
 @import "components/variables";
+@import "plus";
 
 // Reset
 @import "components/normalize";
@@ -38,3 +40,13 @@
 @import "components/date_picker/default.scss";
 @import "components/date_picker/default.date.scss";
 @import "components/date_picker/default.time.scss";
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}

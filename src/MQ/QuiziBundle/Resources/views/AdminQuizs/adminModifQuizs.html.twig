@@ -15,6 +15,18 @@
 
     <div class="container">
 
+
+        {% for message in app.session.flashbag.get('info') %}
+
+            <div class="row">
+                <div class="col s12 i12 d12">
+                    <div class="card-panel green lighten-2">
+                        <h5 class="white-text">{{ message }}</h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
         <br>
         <h4 class="black-text">Modifier un quiz</h4>
         <br>

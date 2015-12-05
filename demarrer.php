@@ -8,59 +8,69 @@ print("\n-------------------------------------- \n");
 print($color->getColoredString("Bienvenue au lancement de Quizi \n", "cyan"));
 print("-------------------------------------- \n\n");
 
-print("Veuillez entrer les différents paramètres \n\n ");
+print("Veuillez entrer les differents parametres \n\n");
 
 
 // Demande du host
 print("Host ".$color->getColoredString("[127.0.0.1]", "green").":" );
 
-$host = fscanf(STDIN, "%d.%d.%d.%d");
-print(var_dump($host));
+$database_host="";
+$host = fscanf(STDIN, "%s");
+if($host==NULL){	$database_host="127.0.0.1"; }
+else{ $database_host=$host[0]; }
 
-if($host==NULL){
-	$database_host="127.0.0.1\n";
-}else{
-	$database_host=$host[0].".".$host[1].".".$host[2].".".$host[3]."\n";
+print("Port ".$color->getColoredString("[null]", "green").":" );
+$database_port = fscanf(STDIN, "%s");
+if($database_port==NULL){$database_port="null";}else{
+	$database_port=$database_port[0];
 }
 
-print("\n\n");
-print("Port ".$color->getColoredString("[null]", "green").":" );
-if( !($database_port = fgets(STDIN))){	$database_port="null"; }
-
 print("Nom de la base de donnee ".$color->getColoredString("[quizi]", "green").":" );
-if( !($database_name = fgets(STDIN))){	$database_name="quizi"; }
+$database_name = fscanf(STDIN, "%s");
+if($database_name==NULL){$database_name="quizi";}
+else{ $database_name=$database_name[0]; }
 
-print("Nom de l'utilisateur de la base de donnee ".$color->getColoredString("[user]", "green").":" );
-if( !($database_user = fgets(STDIN))){	$database_user="user"; }
+print("Nom de l'utilisateur de la base de donnee ".$color->getColoredString("[user_quizi]", "green").":" );
+$database_user = fscanf(STDIN, "%s");
+if($database_user==NULL){
+	$database_user="user_quizi";
+}else{
+	$database_user=$database_user[0];
+}
 
 print("Mot de passe de la base de donnee ".$color->getColoredString("[password]", "green").":" );
-if( !($database_password = fgets(STDIN))){	$database_password="password"; }
+$database_password = fscanf(STDIN, "%s");
+if($database_password==NULL){
+	$database_password="password";
+}else{
+	$database_password=$database_password[O];
+}
 
 
-generateParams($database_host,$database_port, $database_name, $database_user, $database_password );
+generateParams($color, $database_host,$database_port, $database_name, $database_user, $database_password );
 
 
-function generateParams($database_host, $database_port, $database_name, $database_user, $database_password){
-	print($database_host."\n");
-	print($database_port."\n");
-	print($database_name."\n");
-	print($database_user."\n");
-	print($database_password."\n");
+function generateParams($color, $database_host, $database_port, $database_name, $database_user, $database_password){
+	print($color->getColoredString("[database_host]", "green"). " : " .$database_host."\n");
+	print($color->getColoredString("[database_port]", "green"). " : " .$database_port."\n");
+	print($color->getColoredString("[database_name]", "green"). " : " .$database_name."\n");
+	print($color->getColoredString("[database_user]", "green"). " : " .$database_user."\n");
+	print($color->getColoredString("[database_password]", "green"). " : " .$database_password."\n");
+
 
 	echo exec('rm app/config/parameters.yml');
 	
 	$fp = fopen('app/config/parameters.yml', 'c');
 	fwrite($fp, 'parameters :'."\n");
-	fwrite($fp, '    database_host: '.$database_host);
-	fwrite($fp, '    database_port: '.$database_port);
-	fwrite($fp, '    database_name: '.$database_name);
-	fwrite($fp, '    database_user: '.$database_user);
-	fwrite($fp, '    database_password: '.$database_password);
+	fwrite($fp, '    database_host: '.$database_host."\n");
+	fwrite($fp, '    database_port: '.$database_port."\n");
+	fwrite($fp, '    database_name: '.$database_name."\n");
+	fwrite($fp, '    database_user: '.$database_user."\n");
+	fwrite($fp, '    database_password: '.$database_password."\n");
 	fwrite($fp, '    mailer_transport: smtp'."\n");
 	fwrite($fp, '    mailer_host: '.$database_host."\n");
 	fwrite($fp, '    mailer_user: null'."\n");
 	fwrite($fp, '    mailer_password: null'."\n");
-	fwrite($fp, '    secret: null'."\n");
 	fwrite($fp, '    secret: a37bbe4372b18dc6977b831e9e6be5e0ff8d7e6e'."\n");
 	fclose($fp);
 }

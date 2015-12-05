@@ -123,7 +123,12 @@ class AdminQuizsController extends Controller
 
                                 $this->addOrUpdateQuestion($quiz, $data);
 
-                                return $this->redirect($this->generateUrl('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId())));
+                                $session = $request->getSession();
+
+                                $session->getFlashBag()->add('info', 'Quiz ajouté avec succès');
+
+
+                                return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
 
                             }
                         }else{
@@ -301,7 +306,15 @@ class AdminQuizsController extends Controller
                                 $this->regexScript($data['rep3']) && $this->regexScript($data['rep4'])){
 
                                 $this->addOrUpdateQuestion($quiz, $data);
-                                return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
+
+                                $this->addOrUpdateQuestion($quiz, $data);
+
+                                $session = $request->getSession();
+
+                                $session->getFlashBag()->add('info', 'Question ajoutée avec succès !');
+
+
+                                return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
                             }else{
                                 return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView(),'error' => 'Vous n\'êtes pas autorisé à entrer ce genre de données ...'));
                             }
@@ -330,6 +343,8 @@ class AdminQuizsController extends Controller
         return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView()));
 
     }
+
+   // méthode utilisé dans la fonction ajoutAction et modifQuizAction
     public function addOrUpdateQuestion($quiz, $data){
 
         $em = $this->getDoctrine()->getManager();
@@ -576,7 +591,14 @@ class AdminQuizsController extends Controller
                                 $em->persist($question);
                                 $em->flush();
 
-                                return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
+                                $this->addOrUpdateQuestion($quiz, $data);
+
+                                $session = $request->getSession();
+
+                                $session->getFlashBag()->add('info', 'Question modifiée avec succès !');
+
+
+                                return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
 
                             }
                         }else{

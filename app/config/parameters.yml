@@ -1,11 +1,11 @@
 parameters :
-    database_host: 127.0.0.1    database_port: 
-    database_name: 
-    database_user: 
-    database_password: 
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: quizi
+    database_user: user_quizi
+    database_password: password
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: null
     mailer_password: null
-    secret: null
     secret: a37bbe4372b18dc6977b831e9e6be5e0ff8d7e6e

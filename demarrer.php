@@ -19,17 +19,23 @@ $host = fscanf(STDIN, "%s");
 if($host==NULL){	$database_host="127.0.0.1"; }
 else{ $database_host=$host[0]; }
 
+
+// Demande du port
 print("Port ".$color->getColoredString("[null]", "green").":" );
 $database_port = fscanf(STDIN, "%s");
 if($database_port==NULL){$database_port="null";}else{
 	$database_port=$database_port[0];
 }
 
+
+// Demande du nom de la BDD
 print("Nom de la base de donnee ".$color->getColoredString("[quizi]", "green").":" );
 $database_name = fscanf(STDIN, "%s");
 if($database_name==NULL){$database_name="quizi";}
 else{ $database_name=$database_name[0]; }
 
+
+// Demande du nom d'utilisateur de la BDD
 print("Nom de l'utilisateur de la base de donnee ".$color->getColoredString("[user_quizi]", "green").":" );
 $database_user = fscanf(STDIN, "%s");
 if($database_user==NULL){
@@ -38,12 +44,14 @@ if($database_user==NULL){
 	$database_user=$database_user[0];
 }
 
+
+// Demande du mot de passe de la BDD
 print("Mot de passe de la base de donnee ".$color->getColoredString("[password]", "green").":" );
 $database_password = fscanf(STDIN, "%s");
 if($database_password==NULL){
 	$database_password="password";
 }else{
-	$database_password=$database_password[O];
+	$database_password=$database_password[0];
 }
 
 

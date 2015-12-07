@@ -85,7 +85,7 @@
 
                             <li class="collection-item">
                                 <div>
-                                    {{ question.titreQuestion }}
+                                    {{ question.titreQuestion|raw }}
                                     <a href="{{ path('mq_quizi_suppr_questions_quizs',{'idQuiz' : quiz.id, 'idQuestion' : question.id}) }}" class="secondary-content" onclick="return confirm('Etes vous sûr de vouloir supprimer cette question ?')"><i class="material-icons">delete</i></a>
                                     <a href="{{ path('mq_quizi_modif_questions_quizs',{'idQuiz' : quiz.id, 'idQuestion' : question.id}) }}" class="secondary-content"><i class="material-icons">mode_edit</i></a>
                                 </div>

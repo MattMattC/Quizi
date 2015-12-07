@@ -74,8 +74,8 @@
                             {% for res in tabResultats %}
 
                                 <tr>
-                                    <td>{{ res.titreQuestion }}</td>
-                                    <td>{{ res.reponseUtilisateur }}</td>
+                                    <td>{{ res.titreQuestion|raw }}</td>
+                                    <td>{{ res.reponseUtilisateur|raw }}</td>
 
                                     {% if res.idReponseUtilisateur == res.idReponseCorrect %}
                                         <td class="green-text">Correct</td>
@@ -84,7 +84,7 @@
                                     {% endif %}
 
                                     {% if quiz.affichageFinalQuiz == 3 %}
-                                        <td>{{ res.reponseCorrect }}</td>
+                                        <td>{{ res.reponseCorrect|raw }}</td>
                                     {% endif %}
 
                                 </tr>

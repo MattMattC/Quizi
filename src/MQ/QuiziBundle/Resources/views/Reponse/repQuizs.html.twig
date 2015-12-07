@@ -33,16 +33,34 @@
                         <div class="collapsible-body">
 
                             <br>
-                            <h5 class="center-align">{{ question.titreQuestion }}</h5>
+                            <h5 class="center-align">{{ question.titreQuestion|raw }}</h5>
                             <br>
 
                             {% set numQuestion = 'question' ~ loop.index %}
                             <div class="row">
                                 {% for reponse in question.reponses %}
-                                    <div class="col s12 m6 l6">
-                                        <div class="reponse center-align">{{ reponse.titreReponse|raw }} </div>
+
+                                    {% if (loop.index%2 == 0) %}
+                                    <div class="row">
+
+                                        <div class="col s12 m6 l6">
+                                            <h6 class="center-align">Reponse {{ loop.index }}</h6>
+                                            <div class="reponse center center-align">{{ reponse.titreReponse|raw }} </div>
+                                        </div>
                                     </div>
+
+                                    {% else %}
+                                        <div class="col s12 m6 l6">
+                                            <h6 class="center-align">Reponse {{ loop.index }}</h6>
+                                            <div class="reponse center center-align">{{ reponse.titreReponse|raw }} </div>
+                                        </div>
+                                    {% endif %}
+
+
+
                                 {% endfor %}
+
+
                             </div>
                             <div class="divider"></div><br>
                             <div class="row center">

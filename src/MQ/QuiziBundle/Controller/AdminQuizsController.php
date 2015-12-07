@@ -253,14 +253,14 @@ class AdminQuizsController extends Controller
 
 
 
-
         // Résultat Formulaire
         if($request->isMethod('POST')){
+
+
 
             $form->handleRequest($request);
 
             if($form->isValid()){
-
 
                 $data = $form->getData();
 
@@ -304,8 +304,6 @@ class AdminQuizsController extends Controller
                         }else{
                             if( $this->regexScript($data['rep1']) && $this->regexScript($data['rep2']) &&
                                 $this->regexScript($data['rep3']) && $this->regexScript($data['rep4'])){
-
-                                $this->addOrUpdateQuestion($quiz, $data);
 
                                 $this->addOrUpdateQuestion($quiz, $data);
 
@@ -539,64 +537,11 @@ class AdminQuizsController extends Controller
                                 $em->remove($question);
                                 $em->flush();
 
-                                $question = new Question();
-                                $question->setTitreQuestion($data['nomQuestion']);
-                                $question->setQuiz($quiz);
-
-
-                                $reponse1 = new Reponse();
-                                $reponse1->setTitreReponse($data['rep1']);
-
-                                $reponse2 = new Reponse();
-                                $reponse2->setTitreReponse($data['rep2']);
-
-                                if($data['reponseCorrect'] == 1)
-                                    $reponse1->setBonneReponse(1);
-                                else
-                                    $reponse1->setBonneReponse(0);
-                                if($data['reponseCorrect'] == 2)
-                                    $reponse2->setBonneReponse(1);
-                                else
-                                    $reponse2->setBonneReponse(0);
-
-                                $question->addReponse($reponse1);
-                                $question->addReponse($reponse2);
-
-                                $em->persist($reponse1);
-                                $em->persist($reponse2);
-
-                                if($data['rep3'] != null){
-                                    $reponse3 = new Reponse();
-                                    $reponse3->setTitreReponse($data['rep3']);
-                                    if($data['reponseCorrect'] == 3)
-                                        $reponse3->setBonneReponse(1);
-                                    else
-                                        $reponse3->setBonneReponse(0);
-                                    $question->addReponse($reponse3);
-                                    $em->persist($reponse3);
-                                }
-
-                                if($data['rep4'] != null){
-                                    $reponse4 = new Reponse();
-                                    $reponse4->setTitreReponse($data['rep4']);
-                                    if($data['reponseCorrect'] == 4)
-                                        $reponse4->setBonneReponse(1);
-                                    else
-                                        $reponse4->setBonneReponse(0);
-                                    $question->addReponse($reponse4);
-                                    $em->persist($reponse4);
-                                }
-
-                                // Ajout de la question dans la BDD
-                                $em->persist($question);
-                                $em->flush();
-
                                 $this->addOrUpdateQuestion($quiz, $data);
 
                                 $session = $request->getSession();
 
                                 $session->getFlashBag()->add('info', 'Question modifiée avec succès !');
-
 
                                 return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
 
@@ -624,7 +569,7 @@ class AdminQuizsController extends Controller
      * Cette fonction permet de supprimer une question dans un quiz
      *
      */
-    public function supprimerQuestionsAction($idQuiz, $idQuestion) {
+    public function supprimerQuestionsAction($idQuiz, $idQuestion, Request $request) {
 
         // Si on est du role Admin, on est redirigé
         if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')){
@@ -683,6 +628,12 @@ class AdminQuizsController extends Controller
                     $em->remove($rep);
                 $em->remove($question);
                 $em->flush();
+
+
+                $session = $request->getSession();
+                $session->getFlashBag()->add('info', 'Question supprimée avec succès !');
+                return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
+
 
             }else{
                 return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));

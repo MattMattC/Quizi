@@ -45,7 +45,7 @@ class ReponseController extends Controller
             $tabReponseQuestion[$i]=array();
             for($j = 0 ; $j < $tailleReponse ; $j++ ) {
                 $reponse = $listQuestions[$i-1]->getReponses()[$j];
-                $listeReponses[$reponse->getId()] = "reponse ".($j+1);
+                $listeReponses[$reponse->getId()] = "Reponse ".($j+1);
                 array_push($tabReponseQuestion[$i], $reponse->getTitreReponse());
 
             }

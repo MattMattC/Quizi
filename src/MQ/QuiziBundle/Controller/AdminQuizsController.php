@@ -91,7 +91,11 @@ class AdminQuizsController extends Controller
                     if(($data['rep4'] == null && $data['reponseCorrect'] == 4) ||
                         ($data['rep3'] == null && $data['reponseCorrect'] == 3) ){
 
-                        return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView(),'error' => 'Vous avez coché une réponse correcte qui est vide'));
+                        $session = $request->getSession();
+                        $session->getFlashBag()->add('infoError', 'Vous avez coché une réponse correcte qui est vide');
+
+
+                        return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView()));
 
                     }else{
                         if( $this->regexScript($data['rep1']) && $this->regexScript($data['rep2']) &&
@@ -125,7 +129,12 @@ class AdminQuizsController extends Controller
 
                             }
                         }else{
-                            return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView(),'error' => 'Vous n\'êtes pas autorisé à entrer ce genre de données ...'));
+
+                            $session = $request->getSession();
+                            $session->getFlashBag()->add('infoError', 'Vous n\'êtes pas autorisé à entrer ce genre de données ...');
+
+
+                            return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView()));
                         }
 
                     }
@@ -133,7 +142,9 @@ class AdminQuizsController extends Controller
 
                 }else{
 
-                    return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView(),'error' => 'Certains champs sont vides'));
+                    $session = $request->getSession();
+                    $session->getFlashBag()->add('infoError', 'Certains champs sont vides');
+                    return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView()));
 
                 }
 
@@ -297,19 +308,20 @@ class AdminQuizsController extends Controller
 
                         $session = $request->getSession();
 
-                        $session->getFlashBag()->add('info', 'Quiz ajouté avec succès');
+                        $session->getFlashBag()->add('info', 'Quiz modifié avec succès');
 
 
                         return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
 
                     } else {
+                        $session = $request->getSession();
+                        $session->getFlashBag()->add('infoError', 'Modification non effectuée : certains champs étaient vides');
 
                         return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array(
                             'listQuestions' => $listQuestions,
                             'quiz' => $quiz,
                             'form' => $form->createView(),
-                            'form2' => $form2->createView(),
-                            'error' => 'Modification non effectuée : certains champs étaient vides'));
+                            'form2' => $form2->createView()));
 
                     }
                 }
@@ -331,12 +343,16 @@ class AdminQuizsController extends Controller
                         if(($data2['rep4'] == null && $data2['reponseCorrect'] == 4) ||
                             ($data2['rep3'] == null && $data2['reponseCorrect'] == 3) ){
 
+                            $session = $request->getSession();
+                            $session->getFlashBag()->add('infoError', 'Question non ajoutée : vous avez coché une réponse correcte qui est vide');
+
                             return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array(
                                 'listQuestions' => $listQuestions,
                                 'quiz' => $quiz,
                                 'form' => $form->createView(),
-                                'form2' => $form2->createView(),
-                                'error' => 'Question non ajoutée : vous avez coché une réponse correcte qui est vide'));
+                                'form2' => $form2->createView()
+                                )
+                            );
 
                         }else{
                             if( $this->regexScript($data2['rep1']) && $this->regexScript($data2['rep2']) &&
@@ -346,35 +362,40 @@ class AdminQuizsController extends Controller
 
                                 $session = $request->getSession();
 
-                                $session->getFlashBag()->add('info', 'Question modifié avec succès !');
+                                $session->getFlashBag()->add('info', 'Question ajoutée avec succès !');
 
 
                                 return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
                             }else{
+
+                                $session = $request->getSession();
+                                $session->getFlashBag()->add('infoError', 'Vous n\'êtes pas autorisé à entrer ce genre de données ...');
+
                                 return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array(
                                     'form' => $form->createView(),
-                                    'form2' => $form2->createView(),
-                                    'error' => 'Vous n\'êtes pas autorisé à entrer ce genre de données ...'));
+                                    'form2' => $form2->createView()));
                             }
                         }
 
                     }else{
+                        $session = $request->getSession();
+                        $session->getFlashBag()->add('infoError', 'Question non ajoutée : certains champs étaient vides');
 
                         return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array(
                             'listQuestions' => $listQuestions,
                             'quiz' => $quiz,
                             'form' => $form->createView(),
-                            'form2' => $form2->createView(),
-                            'error' => 'Question non ajoutée : certains champs étaient vides'));
+                            'form2' => $form2->createView()));
 
                     }
 
                 }else{
+                    $session = $request->getSession();
+                    $session->getFlashBag()->add('infoError', 'Formulaire non valide');
 
                     return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz,
                         'form' => $form->createView(),
-                        'form2' => $form2->createView(),
-                        'error' => 'Formulaire non valide'));
+                        'form2' => $form2->createView()));
 
                 }
             }
@@ -569,7 +590,11 @@ class AdminQuizsController extends Controller
                             if(($data['rep4'] == null && $data['reponseCorrect'] == 4) ||
                                 ($data['rep3'] == null && $data['reponseCorrect'] == 3) ){
 
-                                return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuestion.html.twig', array('form' => $form->createView(),'error' => 'Question non modifiée : vous avez coché une réponse correcte qui est vide'));
+                                $session = $request->getSession();
+                                $session->getFlashBag()->add('infoError', 'Question non modifiée : vous avez coché une réponse correcte qui est vide');
+
+
+                                return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuestion.html.twig', array('form' => $form->createView()));
 
                             }else{
 
@@ -590,12 +615,20 @@ class AdminQuizsController extends Controller
 
                             }
                         }else{
-                            return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuestion.html.twig', array('form' => $form->createView(),'error' => 'Question non modifiée : certains champs étaient vides'));
+
+
+                            $session = $request->getSession();
+                            $session->getFlashBag()->add('infoError', 'Question non modifiée : certains champs étaient vides');
+                            return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuestion.html.twig', array('form' => $form->createView()));
                         }
                     }
                 }else{
+                    $session = $request->getSession();
+                    $session->getFlashBag()->add('infoError', 'Formulaire non valide');
+
+
                     return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz,
-                        'form' => $form->createView(),'error' => 'Formulaire non valide'));
+                        'form' => $form->createView()));
                 }
             }
             return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuestion.html.twig', array('form' => $form->createView()));
@@ -690,7 +723,7 @@ class AdminQuizsController extends Controller
         }else{
             throw new NotFoundHttpException("La question = ".$idQuestion." n'appartient pas au quiz actuel.");
         }
-        return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
+       // return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
     }
 
     public function regexScript($text){

@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use MQ\UserBundle\Entity\User;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use MQ\QuiziBundle\Entity\Quiz;
 
 class SecurityController extends Controller
 {
@@ -157,10 +158,15 @@ class SecurityController extends Controller
      * Suppresion des Utilisateurs
      */
 
-    public function deleteUserAction($id){
+    public function deleteUserAction($id, Request $request){
+
 
         if ( $this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             if( $this->getUser()->getRoles()[0] != 'ROLE_ADMIN'){
+
+                $session = $request->getSession();
+                $session->getFlashBag()->add('infoError', 'Vous n\'avez pas les droits necessaires...');
+
                 return $this->redirectToRoute('mq_quizi_quizs');
             }else{
 
@@ -172,13 +178,34 @@ class SecurityController extends Controller
                         'Pas d\'utilisateur trouvé :' . $id
                     );
                 }else{
-                    if($user->getRoles() == 'ROLE_ADMIN'){
-                        throw $this->createNotFoundException(
-                            'Impossible de supprimée l\'utilisateur :' . $id . ' car il est ADMIN'
-                        );
+                    if($user->getRoles()[0] == 'ROLE_ADMIN'){
+
+                        $session = $request->getSession();
+                        $session->getFlashBag()->add('infoError', 'L\'administrateur ne peut être supprimée ;)');
+
+                        return $this->redirect($this->generateUrl("gestion_user"));
                     }else{
+
+                        // Suppression récursive
+                        $quizs = $em->getRepository('MQQuiziBundle:Quiz')->findBy(array('user'=>$user));
+                        foreach($quizs as $quiz){
+                            $questions = $em->getRepository('MQQuiziBundle:Question')->findBy(array('quiz'=>$quiz));
+                            foreach($questions as $question) {
+                                $reponses = $em->getRepository('MQQuiziBundle:Reponse')->findBy(array('question'=>$question));
+                                foreach($reponses as $reponse) {
+                                    $em->remove($reponse);
+                                }
+                                $em->remove($question);
+                            }
+                            $em->remove($quiz);
+                        }
+
                         $em->remove($user);
                         $em->flush();
+
+                        $session = $request->getSession();
+                        $session->getFlashBag()->add('info', 'Utilisateur supprimé avec succès');
+
                     }
                 }
 
@@ -187,6 +214,7 @@ class SecurityController extends Controller
         }else{
             return $this->redirectToRoute('mq_quizi_quizs');
         }
+
     }
 
 

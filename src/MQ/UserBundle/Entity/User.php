@@ -63,7 +63,7 @@ class User implements UserInterface
      *
      * @return integer
      */
-    public function getId()
+        public function getId()
     {
         return $this->id;
     }

@@ -495,10 +495,6 @@ class AdminQuizsController extends Controller
         // Si la question appartient bien au quiz actuel, on supprime
         if($bool == true){
 
-
-
-
-
             // Creation formulaire
             $data = array();
             $form2 = $this->createFormBuilder($data)
@@ -680,14 +676,6 @@ class AdminQuizsController extends Controller
         return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
     }
 
-
-    /*
-        public function getFormulaire($quiz){
-
-
-            return $form;
-        }
-    */
     public function regexScript($text){
         $re = "/<script.*>.*<\\/script>/";
 

@@ -167,14 +167,19 @@ class SecurityController extends Controller
                 // vérification existance de l'utilisateur
                 $em = $this->getDoctrine()->getManager();
                 $user= $em->getRepository('MQUserBundle:User')->find($id);
-
                 if (!$user) {
                     throw $this->createNotFoundException(
                         'Pas d\'utilisateur trouvé :' . $id
                     );
                 }else{
-                    $em->remove($user);
-                    $em->flush();
+                    if($user->getRoles() == 'ROLE_ADMIN'){
+                        throw $this->createNotFoundException(
+                            'Impossible de supprimée l\'utilisateur :' . $id . ' car il est ADMIN'
+                        );
+                    }else{
+                        $em->remove($user);
+                        $em->flush();
+                    }
                 }
 
                 return $this->redirect($this->generateUrl("gestion_user"));

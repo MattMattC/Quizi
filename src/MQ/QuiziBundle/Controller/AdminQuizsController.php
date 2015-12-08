@@ -156,7 +156,7 @@ class AdminQuizsController extends Controller
      * Cette fonction permet de supprimer un quiz
      *
      */
-    public function supprimerQuizAction($idQuiz) {
+    public function supprimerQuizAction($idQuiz, Request $request) {
 
         // On récupère le repository
         $repository = $this->getDoctrine()
@@ -196,7 +196,12 @@ class AdminQuizsController extends Controller
         $em->remove($quiz);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('mq_quizi_admin_quizs'));
+        $session = $request->getSession();
+
+        $session->getFlashBag()->add('info', 'Quiz supprimé avec succès');
+
+
+        return $this->redirectToRoute('mq_quizi_admin_quizs');
 
 
     }
@@ -290,6 +295,13 @@ class AdminQuizsController extends Controller
                         $em->persist($quiz);
                         $em->flush();
 
+                        $session = $request->getSession();
+
+                        $session->getFlashBag()->add('info', 'Quiz ajouté avec succès');
+
+
+                        return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
+
                     } else {
 
                         return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array(
@@ -334,7 +346,7 @@ class AdminQuizsController extends Controller
 
                                 $session = $request->getSession();
 
-                                $session->getFlashBag()->add('info', 'Question ajoutée avec succès !');
+                                $session->getFlashBag()->add('info', 'Question modifié avec succès !');
 
 
                                 return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
@@ -668,7 +680,12 @@ class AdminQuizsController extends Controller
 
 
             }else{
-                return $this->redirect($this->generateUrl('mq_quizi_modif_quizs',array('idQuiz' => $quiz->getId())));
+
+                $session = $request->getSession();
+
+                $session->getFlashBag()->add('info', 'Suppression impossible : un quiz doit toujours contenir au moins une question');
+
+                return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
             }
         }else{
             throw new NotFoundHttpException("La question = ".$idQuestion." n'appartient pas au quiz actuel.");

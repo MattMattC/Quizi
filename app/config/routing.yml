@@ -32,3 +32,9 @@ gestion_user:
 delete_user:
     path: /delete_utilisateur/{id}
     defaults: { _controller: MQUserBundle:Security:deleteUser}
+
+pageNotFound:
+    pattern:  /{path}
+    defaults: { _controller: AppBundle:PageNotFound:pageNotFound, path: '' }
+    requirements:
+        path: .*

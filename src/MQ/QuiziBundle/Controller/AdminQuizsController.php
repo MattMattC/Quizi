@@ -51,34 +51,27 @@ class AdminQuizsController extends Controller
         }
 
 
-
-
         // Creation formulaire
         $data = array();
-        $form = $this->createFormBuilder($data);
+        $form = $this->createFormBuilder($data)
+            ->add('nomQuiz','text')
+            ->add('affichageFinal', 'choice', array(
+                'choices' => array('1' => 'Score', '2' => 'Score + Résultat par question','3' => 'Score + Résultat par question + Bonne réponse'),
+                'multiple' => false, 'expanded' => true
+            ))
+            ->add('nomQuestion','text')
+            ->add('rep1','text')
+            ->add('rep2','text')
+            ->add('rep3','text', array('required' => false))
+            ->add('rep4','text', array('required' => false))
 
-        $form = $form->add('nomQuiz','text');
-        $form = $form->add('affichageFinal', 'choice', array(
-            'choices' => array('1' => 'Score', '2' => 'Score + Résultat par question','3' => 'Score + Résultat par question + Bonne réponse'),
-            'multiple' => false, 'expanded' => true
-        ));
+            ->add('reponseCorrect', 'choice', array(
+                'choices' => array('1' => 'Réponse 1', '2' => 'Réponse 2','3' => 'Réponse 3', '4' => 'Réponse 4'),
+                'multiple' => false, 'expanded' => true
+            ))
 
-        $form = $form->add('nomQuestion','text');
-        $form = $form->add('rep1','text');
-        $form = $form->add('rep2','text');
-        $form = $form->add('rep3','text', array('required' => false));
-        $form = $form->add('rep4','text', array('required' => false));
-
-        $form = $form->add('reponseCorrect', 'choice', array(
-            'choices' => array('1' => 'Réponse 1', '2' => 'Réponse 2','3' => 'Réponse 3', '4' => 'Réponse 4'),
-            'multiple' => false, 'expanded' => true
-        ));
-
-        $form = $form->add('btnCreer', 'submit', array('label' => 'Créer le Quiz', 'attr' => array('class' => 'btn waves-effect waves-light')));
-        $form = $form->getForm();
-
-
-
+            ->add('btnCreer', 'submit', array('label' => 'Créer le Quiz', 'attr' => array('class' => 'btn waves-effect waves-light')))
+            ->getForm();
 
         // Résultat Formulaire
         if($request->isMethod('POST')){
@@ -247,20 +240,37 @@ class AdminQuizsController extends Controller
             ->findBy(array('quiz' => $quiz))
         ;
 
-
         // Creation formulaire
-        $form = $this->getFormulaire($quiz);
+        $data = array();
+        $form = $this->createFormBuilder($data)
+            ->add('nomQuiz','text',array('data' => $quiz->getTitreQuiz()))
+            ->add('affichageFinal', 'choice', array(
+                'choices' => array('1' => 'Score', '2' => 'Score + Résultat par question','3' => 'Score + Résultat par question + Bonne réponse'),
+                'multiple' => false, 'expanded' => true, 'data' => $quiz->getAffichageFinalQuiz()
+            ))
+            ->add('btnModifInfoQuiz', 'submit', array('label' => 'Modifier', 'attr' => array('class' => 'btn waves-effect waves-light')))
+            ->getForm();
 
 
+        $data2 = array();
+        $form2 = $this->createFormBuilder($data2)
+            ->add('nomQuestion','text')
+            ->add('rep1','text')
+            ->add('rep2','text')
+            ->add('rep3','text', array('required' => false))
+            ->add('rep4','text', array('required' => false))
+            ->add('reponseCorrect', 'choice', array(
+                'choices' => array('1' => 'Réponse 1', '2' => 'Réponse 2','3' => 'Réponse 3', '4' => 'Réponse 4'),
+                'multiple' => false, 'expanded' => true
+            ))
+            ->add('btnAddQuestion', 'submit', array('label' => 'Ajouter une question', 'attr' => array('class' => 'btn waves-effect waves-light')))
+            ->getForm();
 
         // Résultat Formulaire
         if($request->isMethod('POST')){
 
-
-
             $form->handleRequest($request);
-
-            if($form->isValid()){
+            if($form->isValid()) {
 
                 $data = $form->getData();
 
@@ -269,7 +279,7 @@ class AdminQuizsController extends Controller
 
 
                     // Si les champs ne sont pas vide
-                    if($data['nomQuiz'] != null && $data['affichageFinal'] != null){
+                    if ($data['nomQuiz'] != null && $data['affichageFinal'] != null) {
 
                         $em = $this->getDoctrine()->getManager();
 
@@ -280,32 +290,47 @@ class AdminQuizsController extends Controller
                         $em->persist($quiz);
                         $em->flush();
 
-                    }else{
+                    } else {
 
-                        return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView(),'error' => 'Modification non effectuée : certains champs étaient vides'));
+                        return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array(
+                            'listQuestions' => $listQuestions,
+                            'quiz' => $quiz,
+                            'form' => $form->createView(),
+                            'form2' => $form2->createView(),
+                            'error' => 'Modification non effectuée : certains champs étaient vides'));
 
                     }
                 }
+            }
 
+            $form2->handleRequest($request);
+            if($form2->isValid()){
+
+                $data2 = $form2->getData();
                 // Ajout d'une question pour un quiz
-                if ($form->get('btnAddQuestion')->isClicked()) {
+                if ($form2->get('btnAddQuestion')->isClicked()) {
 
                     // Si les champs obligatoire ne sont pas vide
-                    if($data['nomQuestion'] != null && $data['rep1'] != null
-                        && $data['rep2'] != null && $data['reponseCorrect'] != null){
+                    if($data2['nomQuestion'] != null && $data2['rep1'] != null
+                        && $data2['rep2'] != null && $data2['reponseCorrect'] != null){
 
 
                         // Si une case de réponse correct est cochée et cette réponse est vide
-                        if(($data['rep4'] == null && $data['reponseCorrect'] == 4) ||
-                            ($data['rep3'] == null && $data['reponseCorrect'] == 3) ){
+                        if(($data2['rep4'] == null && $data2['reponseCorrect'] == 4) ||
+                            ($data2['rep3'] == null && $data2['reponseCorrect'] == 3) ){
 
-                            return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView(),'error' => 'Question non ajoutée : vous avez coché une réponse correcte qui est vide'));
+                            return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array(
+                                'listQuestions' => $listQuestions,
+                                'quiz' => $quiz,
+                                'form' => $form->createView(),
+                                'form2' => $form2->createView(),
+                                'error' => 'Question non ajoutée : vous avez coché une réponse correcte qui est vide'));
 
                         }else{
-                            if( $this->regexScript($data['rep1']) && $this->regexScript($data['rep2']) &&
-                                $this->regexScript($data['rep3']) && $this->regexScript($data['rep4'])){
+                            if( $this->regexScript($data2['rep1']) && $this->regexScript($data2['rep2']) &&
+                                $this->regexScript($data2['rep3']) && $this->regexScript($data2['rep4'])){
 
-                                $this->addOrUpdateQuestion($quiz, $data);
+                                $this->addOrUpdateQuestion($quiz, $data2);
 
                                 $session = $request->getSession();
 
@@ -314,35 +339,46 @@ class AdminQuizsController extends Controller
 
                                 return $this->redirectToRoute('mq_quizi_modif_quizs', array('idQuiz' => $quiz->getId()));
                             }else{
-                                return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array('form' => $form->createView(),'error' => 'Vous n\'êtes pas autorisé à entrer ce genre de données ...'));
+                                return $this->render('MQQuiziBundle:AdminQuizs:adminAddQuizs.html.twig', array(
+                                    'form' => $form->createView(),
+                                    'form2' => $form2->createView(),
+                                    'error' => 'Vous n\'êtes pas autorisé à entrer ce genre de données ...'));
                             }
-
-
                         }
 
                     }else{
 
-                        return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView(),'error' => 'Question non ajoutée : certains champs étaient vides'));
+                        return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array(
+                            'listQuestions' => $listQuestions,
+                            'quiz' => $quiz,
+                            'form' => $form->createView(),
+                            'form2' => $form2->createView(),
+                            'error' => 'Question non ajoutée : certains champs étaient vides'));
 
                     }
 
+                }else{
+
+                    return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz,
+                        'form' => $form->createView(),
+                        'form2' => $form2->createView(),
+                        'error' => 'Formulaire non valide'));
+
                 }
-
-
-            }else{
-
-                return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView(),'error' => 'Formulaire non valide'));
-
             }
 
         }
 
 
-        return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView()));
+        return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array(
+            'listQuestions' => $listQuestions,
+            'quiz' => $quiz,
+            'form' => $form->createView(),
+            'form2' => $form2->createView()));
 
     }
 
-   // méthode utilisé dans la fonction ajoutAction et modifQuizAction
+    // méthode utilisé dans la fonction ajoutAction et modifQuizAction
     public function addOrUpdateQuestion($quiz, $data){
 
         $em = $this->getDoctrine()->getManager();
@@ -465,25 +501,24 @@ class AdminQuizsController extends Controller
 
             // Creation formulaire
             $data = array();
-            $form = $this->createFormBuilder($data);
-
-            $form = $form->add('nomQuestion','text', array('data' => $question->getTitreQuestion()));
-            $form = $form->add('rep1','text', array('data' => $question->getReponses()[0]->getTitreReponse()));
-            $form = $form->add('rep2','text', array('data' => $question->getReponses()[1]->getTitreReponse()));
+            $form2 = $this->createFormBuilder($data)
+                ->add('nomQuestion','text', array('data' => $question->getTitreQuestion()))
+                ->add('rep1','text', array('data' => $question->getReponses()[0]->getTitreReponse()))
+                ->add('rep2','text', array('data' => $question->getReponses()[1]->getTitreReponse()));
 
             if(sizeof($question->getReponses()) == 4){
-                $form = $form->add('rep3','text', array('data' => $question->getReponses()[2]->getTitreReponse(), 'required' => false));
-                $form = $form->add('rep4','text', array('data' => $question->getReponses()[3]->getTitreReponse(), 'required' => false));
+                $form2->add('rep3','text', array('data' => $question->getReponses()[2]->getTitreReponse(), 'required' => false))
+                    ->add('rep4','text', array('data' => $question->getReponses()[3]->getTitreReponse(), 'required' => false));
             }
 
             if(sizeof($question->getReponses()) == 3){
-                $form = $form->add('rep3','text', array('data' => $question->getReponses()[2]->getTitreReponse(), 'required' => false));
-                $form = $form->add('rep4','text', array('required' => false));
+                $form2->add('rep3','text', array('data' => $question->getReponses()[2]->getTitreReponse(), 'required' => false))
+                    ->add('rep4','text', array('required' => false));
             }
 
             if(sizeof($question->getReponses()) == 2){
-                $form = $form->add('rep3','text', array('required' => false));
-                $form = $form->add('rep4','text', array('required' => false));
+                $form2->add('rep3','text', array('required' => false))
+                    ->add('rep4','text', array('required' => false));
             }
 
             // Quel est la bonne réponse ?
@@ -492,12 +527,12 @@ class AdminQuizsController extends Controller
                     $bonneReponse = $i+1;
             }
 
-            $form = $form->add('reponseCorrect', 'choice', array(
+            $form2->add('reponseCorrect', 'choice', array(
                 'choices' => array('1' => 'Réponse 1', '2' => 'Réponse 2','3' => 'Réponse 3', '4' => 'Réponse 4'),
                 'multiple' => false, 'expanded' => true, 'data' => $bonneReponse
             ));
 
-            $form = $form->add('btnModifQuestion', 'submit', array('label' => 'Modifier', 'attr' => array('class' => 'btn waves-effect waves-light')));
+            $form = $form2->add('btnModifQuestion', 'submit', array('label' => 'Modifier', 'attr' => array('class' => 'btn waves-effect waves-light')));
             $form = $form->getForm();
 
 
@@ -551,7 +586,8 @@ class AdminQuizsController extends Controller
                         }
                     }
                 }else{
-                    return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz, 'form' => $form->createView(),'error' => 'Formulaire non valide'));
+                    return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuizs.html.twig', array('listQuestions' => $listQuestions, 'quiz' => $quiz,
+                        'form' => $form->createView(),'error' => 'Formulaire non valide'));
                 }
             }
             return $this->render('MQQuiziBundle:AdminQuizs:adminModifQuestion.html.twig', array('form' => $form->createView()));
@@ -645,35 +681,13 @@ class AdminQuizsController extends Controller
     }
 
 
+    /*
+        public function getFormulaire($quiz){
 
-    public function getFormulaire($quiz){
 
-        $data = array();
-        $form = $this->createFormBuilder($data);
-
-        $form = $form->add('nomQuiz','text',array('data' => $quiz->getTitreQuiz()));
-        $form = $form->add('affichageFinal', 'choice', array(
-            'choices' => array('1' => 'Score', '2' => 'Score + Résultat par question','3' => 'Score + Résultat par question + Bonne réponse'),
-            'multiple' => false, 'expanded' => true, 'data' => $quiz->getAffichageFinalQuiz()
-        ));
-
-        $form = $form->add('nomQuestion','text');
-        $form = $form->add('rep1','text');
-        $form = $form->add('rep2','text');
-        $form = $form->add('rep3','text', array('required' => false));
-        $form = $form->add('rep4','text', array('required' => false));
-
-        $form = $form->add('reponseCorrect', 'choice', array(
-            'choices' => array('1' => 'Réponse 1', '2' => 'Réponse 2','3' => 'Réponse 3', '4' => 'Réponse 4'),
-            'multiple' => false, 'expanded' => true
-        ));
-
-        $form = $form->add('btnModifInfoQuiz', 'submit', array('label' => 'Modifier', 'attr' => array('class' => 'btn waves-effect waves-light')));
-        $form = $form->add('btnAddQuestion', 'submit', array('label' => 'Ajouter une question', 'attr' => array('class' => 'btn waves-effect waves-light')));
-        $form = $form->getForm();
-        return $form;
-    }
-
+            return $form;
+        }
+    */
     public function regexScript($text){
         $re = "/<script.*>.*<\\/script>/";
 

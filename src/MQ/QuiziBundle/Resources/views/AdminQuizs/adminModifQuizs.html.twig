@@ -44,7 +44,6 @@
         {% endif %}
 
 
-        {{ form_start(form) }}
 
         <ul class="collapsible" data-collapsible="expandable">
 
@@ -55,6 +54,7 @@
 
                     <div class="section">
 
+                        {{ form_start(form) }}
                         <h6>Nom du Quiz *</h6>
                         {{ form_widget(form.nomQuiz) }}
 
@@ -66,10 +66,11 @@
                             {{ form_row(form.btnModifInfoQuiz) }}<br>
                         </div>
 
+                        {{ form_end(form) }}
                     </div>
-
                 </div>
             </li>
+
 
 
 
@@ -105,30 +106,31 @@
                 <div class="collapsible-header grey lighten-4"><i class="material-icons">add_circle</i>Ajouter une question</div>
                 <div class="collapsible-body">
 
+                    {{ form_start(form2) }}
                     <br>
                     <h6>Nom de la Question *</h6>
-                    {{ form_widget(form.nomQuestion) }}
+                    {{ form_widget(form2.nomQuestion) }}
 
                     <div class="row">
 
                         <div class=" col s12 m6">
                             <h6>Réponse 1 *</h6>
-                            {{ form_widget(form.rep1) }}
+                            {{ form_widget(form2.rep1) }}
                         </div>
 
                         <div class=" col s12 m6">
                             <h6>Réponse 2 *</h6>
-                            {{ form_widget(form.rep2) }}
+                            {{ form_widget(form2.rep2) }}
                         </div>
 
                         <div class=" col s12 m6">
                             <h6>Réponse 3</h6>
-                            {{ form_widget(form.rep3) }}
+                            {{ form_widget(form2.rep3) }}
                         </div>
 
                         <div class=" col s12 m6">
                             <h6>Réponse 4</h6>
-                            {{ form_widget(form.rep4) }}
+                            {{ form_widget(form2.rep4) }}
                         </div>
 
                     </div>
@@ -136,7 +138,7 @@
                     <div class="center">
 
                         <h6>Quel est la réponse correcte ? *</h6>
-                        {{ form_widget(form.reponseCorrect) }}
+                        {{ form_widget(form2.reponseCorrect) }}
 
                     </div>
                     <br>
@@ -144,17 +146,17 @@
 
                     <div class="center">
 
-                        <br>{{ form_row(form.btnAddQuestion) }}<br>
+                        <br>{{ form_row(form2.btnAddQuestion) }}<br>
 
                     </div>
 
 
+                    {{ form_end(form2) }}
                 </div>
             </li>
         </ul>
 
 
-        {{ form_end(form) }}
 
 
     </div>
